@@ -4,8 +4,7 @@ namespace Util{
 
 void *
 images::loadimage(const char * path){
-char * result;
-void * fresult;
+void * result;
 
 
 {
@@ -15,22 +14,15 @@ if(!img){
 }
 
 fseek(img,0,SEEK_END);
-unsigned long sfile = ftell(img);
+size_t sfile = ftell(img);
 rewind(img);
-result = (char*)malloc(sfile);
-
-fresult=result;
-
-for(sfile;sfile--;){
-	*(result++) = getc(img);
-	//printf("%c\n",*result);
-	
-}
+result = malloc(sfile);
+fread(result, sfile, 1, img);
 
 }
 
-printf("%s\n",(char*)fresult);
-return fresult;
+//printf("%s\n",(char*)fresult);
+return result;
 
 }
 
