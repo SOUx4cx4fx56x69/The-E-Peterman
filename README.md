@@ -1,2 +1,2 @@
-# Stupid Game on old library by shit coder
+# Stupid Game by shit coder
 # 
