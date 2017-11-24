@@ -1,6 +1,5 @@
 #pragma once
-static SDL_Window * m_window;
-static SDL_Surface * m_surface;
+
 
 #define NAMEGAME "The-E-Peterman"
 

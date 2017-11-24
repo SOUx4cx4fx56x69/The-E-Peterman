@@ -6,6 +6,9 @@
 #include<stdlib.h>
 #include<time.h>
 
+SDL_Window * m_window;
+SDL_Surface * m_surface;
+
 static inline void init_graph(void){
 	if( SDL_Init( SDL_INIT_EVERYTHING ) != 0 ) ERROR(SDL_GetError());
 	m_window = SDL_CreateWindow( NAMEGAME, 0
@@ -25,22 +28,14 @@ int main(int argCount,char**arguments){
 
 	init_graph();
 
-	// fill screen
-	SDL_FillRect( m_surface, NULL, SDL_MapRGB( m_surface->format, 0xAD, 0xD8, 0xe6 ) );
 
-        //every time\
- 	we are must update the surface of window
-        SDL_UpdateWindowSurface( m_window ); // m_surface <-> m_window
 
-	SDL_Delay( 2000 ); // 2000 microseconds / 1000 = 2second
+	StartMenu();
+
+
 
 	SDL_DestroyWindow( m_window ); // free memory \
 	and close SDL subsystems
 	SDL_Quit();
-
-
-
-
-	StartMenu();
 
 }
