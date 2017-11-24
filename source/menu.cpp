@@ -20,14 +20,7 @@ void StartMenu(void){
 
 	SDL_Surface * alock = Util::images::loadimage("textures/lock.bmp");
 
-	/*
-	int SDL_BlitSurface(SDL_Surface*    src,
-                    const SDL_Rect* srcrect,
-                    SDL_Surface*    dst,
-                    SDL_Rect*       dstrect)
-
-	*/
-	SDL_BlitSurface(alock, NULL, m_surface, NULL );
+	Util::images::putimage(alock, 240, 150, 0, 0, 300, 400);
 
 
         //every time\
