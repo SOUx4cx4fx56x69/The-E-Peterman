@@ -18,7 +18,7 @@ size_t sfile = ftell(img);
 rewind(img);
 result = malloc(sfile);
 fread(result, sfile, 1, img);
-
+fclose(img);
 }
 
 //printf("%s\n",(char*)fresult);
