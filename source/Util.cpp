@@ -17,7 +17,7 @@ namespace Util{
 		unsigned int x2, unsigned int y2,
 		 unsigned int width, unsigned int height, SDL_Surface * dest){
 	if(!img || !dest) fprintf(stderr,"Bad dest/src surface in images::putimage\n"); 
-	SDL_Rect DestR, SrcR;
+	register SDL_Rect DestR, SrcR;
 	DestR.x = x;
  	DestR.y = y;
 	SrcR.x = x2;

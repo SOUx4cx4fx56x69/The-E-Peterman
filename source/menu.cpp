@@ -27,5 +27,6 @@ void StartMenu(void){
  	we are must update the surface of window
         SDL_UpdateWindowSurface( m_window ); // m_surface <-> m_window
 	SDL_Delay( 2000 ); // 2000 microseconds / 1000 = 2second
+	Util::images::ClearImage(alock);
 
 }
