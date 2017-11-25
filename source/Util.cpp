@@ -3,10 +3,25 @@
 namespace Util{
 
   SDL_Surface * 
-  images::loadimage(const char * path){
-	   SDL_Surface * result = SDL_LoadBMP(path);
+  images::loadimage(const char * path, IMG_InitFlags flag){
+	   SDL_Surface * result;
+           if(flag){
+	    if( !( IMG_Init(flag) & flag ) ) {
+		fprintf(stderr,"Error init SDL_image\n");
+		return 0;
+	    }
+		result=IMG_Load(path);
+	   }
+	   else
+	    result = SDL_LoadBMP(path);
 	   if(result == NULL) fprintf(stderr,"Error load image: %s\n",SDL_GetError());
-	   return result;
+	   SDL_Surface * optimizedResult = SDL_ConvertSurface(result, m_surface->format, 0);
+	   if(!optimizedResult){
+	    fprintf(stderr,"Error optimaze image:%s\n",SDL_GetError());
+	    return result;
+	  }
+	  SDL_FreeSurface(result);
+	  return optimizedResult;
  }
  void images::ClearImage(SDL_Surface * img){
 	   SDL_FreeSurface(img);

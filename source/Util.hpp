@@ -1,11 +1,19 @@
 #include"graph.h"
 #include<stdlib.h>
-
+#include <SDL2/SDL_image.h>
 
 
 namespace Util{
 	namespace images{
-		SDL_Surface * loadimage(const char*);
+		SDL_Surface * loadimage(const char*, IMG_InitFlags flags=(IMG_InitFlags)0);
+		/*
+		typedef enum
+		{
+   		 IMG_INIT_JPG = 0x00000001,
+   		 IMG_INIT_PNG = 0x00000002,
+ 		   IMG_INIT_TIF = 0x00000004
+		} IMG_InitFlags;
+		*/
 		void ClearImage(SDL_Surface*);
 		void putimage(SDL_Surface * img,
 		unsigned int x,unsigned int y,
