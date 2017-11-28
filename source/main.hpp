@@ -1,5 +1,7 @@
 #pragma once
-
+#ifdef _WIN32 || _WIN64
+ #include<stdio.h>
+#endif
 
 #define NAMEGAME "The-E-Peterman"
 

@@ -1,5 +1,8 @@
 #include"graph.h"
-#include<stdlib.h>
+#ifdef _WIN32 || _WIN64
+ #include<stdlib.h>
+#endif
+#include<stdio.h>
 #include <SDL2/SDL_image.h>
 
 

@@ -7,7 +7,7 @@ namespace Util{
 	   SDL_Surface * result;
            if(flag){
 	    if( !( IMG_Init(flag) & flag ) ) {
-		fprintf(stderr,"Error init SDL_image\n");
+		fprintf(stderr,"Error init SDL_image,%s\n",SDL_GetError());
 		return 0;
 	    }
 		result=IMG_Load(path);
