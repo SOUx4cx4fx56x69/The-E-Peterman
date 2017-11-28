@@ -5,6 +5,8 @@ LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf
 EXITNAME=Check
 DIR=source
 
+all:	CompileNotLinked
+	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS)
 CompileNotLinked:
 	$(COMPILER) -c $(DIR)/menu.cpp $(FLAGS) $(LIBS) -o obj/menu.o 
 	$(COMPILER) -c $(DIR)/Util.cpp $(FLAGS) $(LIBS) -o obj/Util.o
@@ -13,12 +15,8 @@ CompileNotLinkedNotHome:
 	$(COMPILER) -c $(DIR)/menu.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/menu.o 
 	$(COMPILER) -c $(DIR)/Util.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/Util.o
 	$(COMPILER) -c $(DIR)/main.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/main.o
-Main:
-	CompileNotLinked
+Main-Not-Home:	CompileNotLinkedNotHome
 	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS)
-Main-Not-Home:
-	CompileNotLinkedNotHome
-	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS)
-Clean:
+clean:
 	rm obj/*.o
 	rm bin/$(EXITNAME)
