@@ -4,6 +4,7 @@
 #endif
 #include<stdio.h>
 #include <SDL2/SDL_image.h>
+#include<string>
 
 
 namespace Util{
@@ -21,6 +22,11 @@ namespace Util{
 		void putimage(SDL_Surface * img,
 		unsigned int x,unsigned int y,
 		unsigned int x2, unsigned int y2, // from x2 image, from y2 image
-		 unsigned int width, unsigned int height, SDL_Surface * dest=m_surface);
-	}
-}
+		 unsigned int width, unsigned int height, SDL_Surface * dest=m_surface,bool ignoreError=true);
+	}//images
+
+	namespace Buttons{
+		std::string GetButton(void);
+	}//Buttons
+
+}//Util

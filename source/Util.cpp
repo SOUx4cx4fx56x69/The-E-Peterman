@@ -30,8 +30,10 @@ namespace Util{
  void images::putimage(SDL_Surface * img,
 		unsigned int x,unsigned int y,
 		unsigned int x2, unsigned int y2,
-		 unsigned int width, unsigned int height, SDL_Surface * dest){
-	if(!img || !dest) fprintf(stderr,"Bad dest/src surface in images::putimage\n"); 
+		 unsigned int width, unsigned int height, SDL_Surface * dest, bool ignoreError){
+        if(!ignoreError)
+	 if(!img || !dest)
+		 fprintf(stderr,"Bad dest/src surface in images::putimage\n"); 
 	register SDL_Rect DestR, SrcR;
 	DestR.x = x;
  	DestR.y = y;
@@ -50,6 +52,19 @@ namespace Util{
 
 
  }
+	std::string Buttons::GetButton(void){
+			SDL_Event e;
+			while(1){
+			SDL_PollEvent(&e);
+			if(e.type == SDL_KEYDOWN){
+			  if(e.key.keysym.scancode != SDL_GetScancodeFromKey(e.key.keysym.scancode)){
+			   std::string btn = SDL_GetKeyName(e.key.keysym.sym);
+			   e.key.keysym.scancode=(SDL_Scancode)0;
+			   return btn;
+			  }//if
+			}//if
+			}//while
+	}//GetButton
 
 
 }

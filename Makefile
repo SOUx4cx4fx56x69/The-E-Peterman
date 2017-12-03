@@ -11,12 +11,14 @@ CompileNotLinked:
 	$(COMPILER) -c $(DIR)/menu.cpp $(FLAGS) $(LIBS) -o obj/menu.o 
 	$(COMPILER) -c $(DIR)/Util.cpp $(FLAGS) $(LIBS) -o obj/Util.o
 	$(COMPILER) -c $(DIR)/main.cpp $(FLAGS) $(LIBS) -o obj/main.o
+	$(COMPILER) -c $(DIR)/Game.cpp $(FLAGS) $(LIBS) -o obj/Game.o
 CompileNotLinkedNotHome:
 	$(COMPILER) -c $(DIR)/menu.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/menu.o 
 	$(COMPILER) -c $(DIR)/Util.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/Util.o
 	$(COMPILER) -c $(DIR)/main.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/main.o
+	$(COMPILER) -c $(DIR)/Game.cpp $(FLAGS) $(LIBS) $(NOTHOMEFLAGS) -o obj/Game.o
 Main-Not-Home:	CompileNotLinkedNotHome
-	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS)
+	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS) $(NOTHOMEFLAGS)
 clean:
 	rm obj/*.o
 	rm bin/$(EXITNAME)

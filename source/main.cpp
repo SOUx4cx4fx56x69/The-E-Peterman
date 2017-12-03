@@ -9,19 +9,22 @@
 SDL_Window * m_window;
 SDL_Surface * m_surface;
 SDL_Renderer * renderer;
+int h_w , w_w;
+TTF_Font * GameFont;
 
-TTF_Font * SansFont;
 
 static inline void init_graph(void){
 	if( SDL_Init( SDL_INIT_EVERYTHING ) != 0 ) ERROR(SDL_GetError());
-	m_window = SDL_CreateWindow( NAMEGAME, 30
-						,30, 640, 480, SDL_WINDOW_SHOWN );
+	m_window = SDL_CreateWindow( NAMEGAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP
+
+ );
 	renderer = SDL_CreateRenderer(m_window, 0 ,SDL_RENDERER_ACCELERATED);
 	if(TTF_Init()) {
 		fprintf(stderr,"TTF_Init error!\n");
 	}
-	SansFont=TTF_OpenFont("Sans.ttf", 24);
-	if(!SansFont)ERROR(TTF_GetError());
+	GameFont=TTF_OpenFont("GameFont.ttf", 28);
+	if(!GameFont)ERROR(TTF_GetError());
 	puts("Renderer init");
 	
 	/*
