@@ -1,8 +1,7 @@
 #include"graph.h"
 #include"main.hpp"
 #include"menu.hpp"
-
-
+#include"Game.hpp"
 #include<stdlib.h>
 #include<time.h>
 
@@ -45,9 +44,10 @@ int main(int argc, char ** arguments){
 
 	init_graph();
 
+	GameDrive::Drive game = GameDrive::Drive();
+	
 
-
-	StartMenu();
+	StartMenu(false);
 
 
 	GAMEEXIT;

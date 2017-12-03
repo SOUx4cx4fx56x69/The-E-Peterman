@@ -9,21 +9,7 @@
 
 static const unsigned short count_menu_button=5;
 
-static inline const char * ReadFile(const char * path){
-FILE * file = fopen(path,"rb");
-if(!file) {
-fprintf(stderr,"Cannot get file %s\n",path);
-return(int)0;
-}
-fseek(file,0,SEEK_END);
-size_t sf = ftell(file);
-rewind(file);
-//printf("%d\n",sf);
-char * Text = (char*)malloc(sf);
-fread(Text, sf, 2, file);
-fclose(file);
-return Text;
-}
+
 
 static void SettingsMenu(void){
 bool menu=true;
@@ -52,7 +38,7 @@ while(menu){
 	}
 
 	NameKeyMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont,
-		 GameDrive::NameKey[i].c_str(), DARKCOLOR,w_w-30);
+		 GameDrive::NameKeys[i].c_str(), DARKCOLOR,w_w-30);
 	if(i==selected)
 	 KeyMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont,
 		 GameDrive::GameKeys[i].c_str(), MenuColor_Selected,w_w-30);
@@ -80,7 +66,19 @@ while(menu){
 			 if(MenuKey == "Escape") menu=false;
 			 else if(MenuKey == "Return"){
 
-				if(selected==GameDrive::CountGameKey) {menu=false;break;}
+				if(selected==GameDrive::CountGameKey) {
+						char Tmp[(16)+1+(7)];
+						FILE * file = fopen(KEYSPATH,"wb");
+						for(unsigned char i = GameDrive::CountGameKey;i--;){
+							sprintf(Tmp, "%s:%s\n",
+							GameDrive::GameKeys[i].c_str(),
+							GameDrive::NameKeys[i].c_str() );
+							fwrite(Tmp, strlen(Tmp), 1, file);
+						}
+						fclose(file);
+						menu=false;
+						break;
+					}
 
 				SDL_Surface * tmpSurf = TTF_RenderUTF8_Blended_Wrapped(GameFont,
 		 			GameDrive::GameKeys[selected].c_str(), KEYCHANGINGCOLOR,w_w-30);
@@ -130,7 +128,7 @@ SDL_Event e;
 PUTBUTTON(textButton);
 
 
-const char * TextTitle = ReadFile(PathToFileTitle);
+const char * TextTitle = Util::ReadFile(PathToFileTitle);
 puts(TextTitle);
 SDL_Surface * TitleMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont, TextTitle, DARKCOLOR,w_w-30);
 free((void*)TextTitle);
@@ -214,7 +212,7 @@ TTF_CloseFont(TitleFont);
 
 }
 
-void StartMenu(void){
+void StartMenu(bool InGame){
 
 	SDL_GetWindowSize(m_window, &h_w, &w_w);
 	if(h_w<800 || w_w<600) {
@@ -292,6 +290,6 @@ void StartMenu(void){
 			fprintf(stderr,"Default %d\n",MenuItem);
 			break;	
 	}
-	StartMenu();
+	StartMenu(InGame);
 
 }

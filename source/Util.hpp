@@ -8,6 +8,7 @@
 
 
 namespace Util{
+	extern const char * ReadFile(const char * path);
 	namespace images{
 		SDL_Surface * loadimage(const char*, IMG_InitFlags flags=(IMG_InitFlags)0);
 		/*

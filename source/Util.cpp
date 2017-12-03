@@ -1,7 +1,22 @@
 #include"Util.hpp"
 
 namespace Util{
-
+    const char * 
+    ReadFile(const char * path){
+	FILE * file = fopen(path,"rb");
+	if(!file) {
+	fprintf(stderr,"Cannot get file %s\n",path);
+	return(int)0;
+	}
+	fseek(file,0,SEEK_END);
+	size_t sf = ftell(file);
+	rewind(file);
+	//printf("%d\n",sf);
+	char * Text = (char*)malloc(sf);
+	fread(Text, sf, 2, file);
+	fclose(file);
+	return Text;
+   }
   SDL_Surface * 
   images::loadimage(const char * path, IMG_InitFlags flag){
 	   SDL_Surface * result;
