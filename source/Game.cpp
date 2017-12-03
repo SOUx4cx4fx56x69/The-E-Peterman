@@ -26,7 +26,7 @@ Drive::Drive(void){
 
 void Drive::InitKeys(void){
 	const char * Keys = Util::ReadFile(KEYSPATH);
-	printf("%s\n",Keys);
+	//printf("%s\n",Keys);
 	void * fKeys = (void *)Keys;
 	std::string KeyValue, KeyName;
 	bool IsValue = true;
@@ -53,5 +53,8 @@ void Drive::InitKeys(void){
 	free(fKeys);
 }
 
+void Drive::StartGame(void){
+
+}
 
 }

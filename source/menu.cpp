@@ -212,7 +212,7 @@ TTF_CloseFont(TitleFont);
 
 }
 
-void StartMenu(bool InGame){
+void * StartMenu(bool InGame){
 
 	SDL_GetWindowSize(m_window, &h_w, &w_w);
 	if(h_w<800 || w_w<600) {
@@ -272,7 +272,7 @@ void StartMenu(bool InGame){
 	SDL_FillRect( m_surface, NULL, SDL_MapRGB( m_surface->format, BACKGROUND ) );
 	switch(MenuItem){	
 		case Game:
-			
+			return (void*)0;
 			break;
 		case Help:
 			WriteHelp();

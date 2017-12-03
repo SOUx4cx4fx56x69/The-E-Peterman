@@ -13,6 +13,7 @@ private:
 void InitKeys(void);
 protected:
 public:
+void StartGame(void);
 Drive(void);
 
 };

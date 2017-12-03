@@ -48,7 +48,7 @@ int main(int argc, char ** arguments){
 	
 
 	StartMenu(false);
-
+	game.StartGame();
 
 	GAMEEXIT;
 
