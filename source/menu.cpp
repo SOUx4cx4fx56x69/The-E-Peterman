@@ -201,7 +201,7 @@ for(unsigned short i = count_menu_button;i--;){
  else
   Text = TTF_RenderUTF8_Blended(GameFont, menu[i], MenuColor_Selected); 
 
- Util::images::putimage(Text, H+(H*i), PADDING+H, 0, 0, w_w, h_w);
+ Util::images::putimage(Text, (H)+(H*i), PADDING+H, 0, 0, w_w, h_w);
  SDL_FreeSurface(Text);
 }
 SDL_FreeSurface(Title);
@@ -217,7 +217,10 @@ TTF_CloseFont(TitleFont);
 void StartMenu(void){
 
 	SDL_GetWindowSize(m_window, &h_w, &w_w);
-
+	if(h_w<800 || w_w<600) {
+		fprintf(stderr,"Minimal screen size 800x600\n");
+		GAMEEXIT;
+	}
 	bool menu=true;
 	SDL_Event e;
 	unsigned char MenuItem = 0;

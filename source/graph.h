@@ -13,7 +13,7 @@
 
 #define PUTBUTTON(text){\
 SDL_Surface * Button = TTF_RenderUTF8_Blended(GameFont, text, {41,255,42});\
-Util::images::putimage(Button, (w_w/2)+50, (h_w/2)+(h_w/4), 0, 0, w_w, h_w);\
+Util::images::putimage(Button, (w_w/2), (h_w/2), 0, 0, w_w, h_w);\
 SDL_FreeSurface(Button);\
 }
 
