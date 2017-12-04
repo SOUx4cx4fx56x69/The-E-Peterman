@@ -3,7 +3,7 @@
  #include<stdio.h>
 #endif
 
-#define NAMEGAME "The-E-Peterman"
+
 
 #define ERROR(str){\
 fprintf(stderr,"%s\n",str);\

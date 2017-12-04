@@ -18,7 +18,7 @@ unsigned short selected = 0;
 
 
 const unsigned int H = (h_w/GameDrive::CountGameKey);
-const unsigned int CenterWidth = (w_w/2);
+const unsigned int CenterWidth = (w_w/4)+(h_w/4)+(w_w/10);
 
 SDL_Surface * KeyMsg;
 SDL_Surface * NameKeyMsg;
@@ -32,7 +32,7 @@ while(menu){
 		else
 		 KeyMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont,
 		  "Exit", MenuColor_NotSelected,w_w-30);
-		Util::images::putimage(KeyMsg, CenterWidth+H/2, H+(H*i)/2 , 0, 0, w_w, h_w);
+                Util::images::putimage(KeyMsg, CenterWidth, H+(H*i)/4 , 0, 0, w_w, h_w);
 		SDL_FreeSurface(KeyMsg);
 		continue;
 	}
@@ -46,9 +46,9 @@ while(menu){
 	 KeyMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont,
 		 GameDrive::GameKeys[i].c_str(), MenuColor_NotSelected,w_w-30);
 
-	Util::images::putimage(KeyMsg, CenterWidth+H/2, H+(H*i)/2 , 0, 0, w_w, h_w);
+        Util::images::putimage(KeyMsg, CenterWidth+H, H+(H*i)/4 , 0, 0, w_w, h_w);
 
-	Util::images::putimage(NameKeyMsg, CenterWidth/2, H+(H*i)/2 , 0, 0, w_w, h_w);
+        Util::images::putimage(NameKeyMsg, CenterWidth/2, H+(H*i)/4 , 0, 0, w_w, h_w);
 
 	SDL_FreeSurface(KeyMsg);
 	SDL_FreeSurface(NameKeyMsg);
@@ -84,8 +84,8 @@ while(menu){
 		 			GameDrive::GameKeys[selected].c_str(), KEYCHANGINGCOLOR,w_w-30);
 
 				Util::images::putimage(tmpSurf, 
-				CenterWidth+H/2,
-				H+(H*selected)/2 ,
+                                CenterWidth+H,
+                                H+(H*selected)/4 ,
 			        0, 0, w_w, h_w);
 				SDL_UpdateWindowSurface(m_window);
 
@@ -133,7 +133,7 @@ puts(TextTitle);
 SDL_Surface * TitleMsg = TTF_RenderUTF8_Blended_Wrapped(GameFont, TextTitle, DARKCOLOR,w_w-30);
 free((void*)TextTitle);
 
-Util::images::putimage(TitleMsg, 170, (h_w/4), 0, 0, w_w, h_w);\
+Util::images::putimage(TitleMsg, (w_w/4)-( SizeFont+FONTPAD*strlen(TextTitle) )/2, (h_w/4), 0, 0, w_w, h_w);\
 while(menu){
 	SDL_UpdateWindowSurface(m_window);
 	SDL_PollEvent(&e); // event	
@@ -175,31 +175,31 @@ inline void WriteMenu(unsigned char selected){
 const char * menu[count_menu_button] = {"Game","Help","About","Settings","Exit"}; //5
 
 
-const unsigned int H = (w_w/count_menu_button);
+const unsigned int H = ( w_w/count_menu_button );
 
 //#define H 270 // TODO: from screen size.
 //printf("%d %d\n",w_w,h_w);
 //#define PADDING 100
-const short PADDING = (w_w/2)-30;
+const short PADDING = (w_w/2);
 
 TTF_Font * TitleFont = TTF_OpenFont("GameFont.ttf", 30);
 
 //TTF_SetFontStyle(GameFont, TTF_STYLE_BOLD);
 
-SDL_Surface * Title = TTF_RenderUTF8_Blended(TitleFont, "The-E-Peterman", Title_Color) ;
+SDL_Surface * Title = TTF_RenderUTF8_Blended(TitleFont, NAMEGAME, Title_Color) ;
 
 SDL_Surface * Text;
 for(unsigned short i = count_menu_button;i--;){
  
  
 
- Util::images::putimage(Title, (w_w/2), H, 0, 0, w_w, h_w); // title
+ Util::images::putimage(Title,  (w_w/2)+( SizeFont+FONTPAD*strlen(NAMEGAME) )/2, H, 0, 0, w_w, h_w); // title
  if(i!=selected) 
    Text = TTF_RenderUTF8_Blended(GameFont, menu[i], MenuColor_NotSelected);
  else
   Text = TTF_RenderUTF8_Blended(GameFont, menu[i], MenuColor_Selected); 
 
- Util::images::putimage(Text, (H)+(H*i), PADDING+H, 0, 0, w_w, h_w);
+ Util::images::putimage(Text, (w_w/4)-(SizeFont+FONTPAD*strlen(menu[i]))+(H*i), PADDING+H, 0, 0, w_w, h_w);
  SDL_FreeSurface(Text);
 }
 SDL_FreeSurface(Title);
@@ -214,11 +214,6 @@ TTF_CloseFont(TitleFont);
 
 void * StartMenu(bool InGame){
 
-	SDL_GetWindowSize(m_window, &h_w, &w_w);
-	if(h_w<800 || w_w<600) {
-		fprintf(stderr,"Minimal screen size 800x600\n");
-		GAMEEXIT;
-	}
 	bool menu=true;
 	SDL_Event e;
 	unsigned char MenuItem = 0;
@@ -259,7 +254,7 @@ void * StartMenu(bool InGame){
 
 	SDL_FillRect( m_surface, NULL, SDL_MapRGB( m_surface->format, BACKGROUND ) );
 		
-	Util::images::putimage(alock, (w_w/2)+40, (h_w/4), 0, 0, w_w, h_w);
+        Util::images::putimage(alock,  (w_w/2)+SIZEALOCK/2, (h_w/4), 0, 0, SIZEALOCK, SIZEALOCK);
     //every time\
  	we are must update the surface of window
  	WriteMenu(MenuItem);

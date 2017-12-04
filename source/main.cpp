@@ -10,7 +10,7 @@ SDL_Surface * m_surface;
 SDL_Renderer * renderer;
 int h_w , w_w;
 TTF_Font * GameFont;
-
+unsigned short SizeFont;
 
 static inline void init_graph(void){
 	if( SDL_Init( SDL_INIT_EVERYTHING ) != 0 ) ERROR(SDL_GetError());
@@ -22,7 +22,14 @@ static inline void init_graph(void){
 	if(TTF_Init()) {
 		fprintf(stderr,"TTF_Init error!\n");
 	}
-	GameFont=TTF_OpenFont("GameFont.ttf", 28);
+	SDL_GetWindowSize(m_window, &h_w, &w_w);
+	if(h_w<800 || w_w<600) {
+		fprintf(stderr,"Minimal screen size 800x600\n");
+		GAMEEXIT;
+	}
+        printf("%d x %d\n",h_w,w_w);
+	SizeFont = ((h_w+w_w)/100);
+        GameFont=TTF_OpenFont("GameFont.ttf", SizeFont );
 	if(!GameFont)ERROR(TTF_GetError());
 	puts("Renderer init");
 	

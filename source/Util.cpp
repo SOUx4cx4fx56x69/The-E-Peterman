@@ -12,8 +12,9 @@ namespace Util{
 	size_t sf = ftell(file);
 	rewind(file);
 	//printf("%d\n",sf);
-	char * Text = (char*)malloc(sf);
+        char * Text = (char*)malloc(sf+1);
 	fread(Text, sf, 2, file);
+        *(Text+sf+1)='\0';
 	fclose(file);
 	return Text;
    }

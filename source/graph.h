@@ -13,12 +13,16 @@
 
 #define PUTBUTTON(text){\
 SDL_Surface * Button = TTF_RenderUTF8_Blended(GameFont, text, {41,255,42});\
-Util::images::putimage(Button, (w_w/2), (h_w/2), 0, 0, w_w, h_w);\
+Util::images::putimage(Button, (w_w/2)+( SizeFont+FONTPAD*strlen(text) )/2, (h_w/2), 0, 0, w_w, h_w);\
 SDL_FreeSurface(Button);\
 }
+#define NAMEGAME "The-E-Peterman"
+#define SIZEALOCK 200
+#define FONTPAD 10
 
 extern SDL_Window * m_window;
 extern SDL_Surface * m_surface;
 extern TTF_Font * GameFont;
 extern SDL_Renderer * renderer;
 extern int h_w , w_w; // height of window, width of window
+extern unsigned short SizeFont;

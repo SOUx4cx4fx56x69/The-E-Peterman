@@ -1,5 +1,5 @@
 COMPILER=g++
-NOTHOMEFLAGS=-I./ForCompiler/include -L./ForCompiler/lib/
+NOTHOMEFLAGS=-I./ForCompiler/include -L./ForCompiler/lib/ -m32
 FLAGS= -O2 -static-libstdc++ -static-libgcc -g3 -ggdb 
 LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf
 EXITNAME=Check
@@ -18,7 +18,7 @@ CompileNotLinkedNotHome:
 	$(COMPILER) -c $(DIR)/main.cpp $(FLAGS) $(NOTHOMEFLAGS) $(LIBS) -o obj/main.o
 	$(COMPILER) -c $(DIR)/Game.cpp $(FLAGS) $(LIBS) $(NOTHOMEFLAGS) -o obj/Game.o
 Main-Not-Home:	CompileNotLinkedNotHome
-	$(COMPILER) obj/*.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS) $(NOTHOMEFLAGS)
+	$(COMPILER) obj/menu.o obj/Util.o obj/main.o obj/Game.o -o bin/$(EXITNAME) $(FLAGS) $(LIBS) $(NOTHOMEFLAGS)
 clean:
 	rm obj/*.o
 	rm bin/$(EXITNAME)
