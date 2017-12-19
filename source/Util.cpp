@@ -19,7 +19,8 @@ namespace Util{
 	return Text;
    }
   SDL_Surface * 
-  images::loadimage(const char * path, IMG_InitFlags flag){
+  images::loadimage(const char * path, IMG_InitFlags flag,bool Transparent, 
+	Uint8 r, Uint8 g, Uint8 b){
 	   SDL_Surface * result;
            if(flag){
 	    if( !( IMG_Init(flag) & flag ) ) {
@@ -37,6 +38,10 @@ namespace Util{
 	    return result;
 	  }
 	  SDL_FreeSurface(result);
+	  if ( Transparent )
+		SDL_SetColorKey(optimizedResult, SDL_TRUE, SDL_MapRGB((*optimizedResult).format,r,g,b)); // SDL_TRUE to enable color key\
+	SDL_FALSE to disable.
+
 	  return optimizedResult;
  }
  void images::ClearImage(SDL_Surface * img){
@@ -81,6 +86,37 @@ namespace Util{
 			}//if
 			}//while
 	}//GetButton
+
+
+namespace textures{
+	namespace images{
+		SDL_Texture * 
+		LoadImageAsTexture(const char*path, IMG_InitFlags flags, SDL_Renderer * rend){
+				SDL_Surface * tmpSurf = Util::images::loadimage(path,flags);
+				SDL_Texture * ReturnTexture = SDL_CreateTextureFromSurface(rend,tmpSurf);
+				SDL_FreeSurface(tmpSurf);
+				return ReturnTexture;
+		}//loadimage
+		SDL_Texture * 
+		LoadImageAsTexture(SDL_Surface * surf, SDL_Renderer * rend){
+				SDL_Texture * ReturnTexture = SDL_CreateTextureFromSurface(rend,surf);
+				return ReturnTexture;
+		}//loadimage
+	}//images
+}//textures
+
+
+/*
+namespace sounds{
+	bool Init(unsigned short bitrate, unsigned char channels, unsigned short chunk_size){
+		if(Mix_OpenAudio(bitrate, MIX_DEFAULT_FORMAT, channels, chunk_size)==-1) return false;
+		
+	}
+}
+*/
+
+
+
 
 
 }
