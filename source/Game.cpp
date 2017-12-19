@@ -9,6 +9,9 @@
 
 
 
+
+
+
 #include<unistd.h>
 
 namespace GameDrive{
@@ -73,20 +76,33 @@ void Drive::InitKeys(void){
 	free(fKeys);
 }
 
+
 static void DrawTunnel(void){
+
+
+	GLuint TextureID = Util::textures::GL::LoadTexture("textures/floor.tga");
+	glBindTexture( GL_TEXTURE_2D, TextureID );
+
+
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glPushMatrix();
 	glBegin(GL_QUADS);
 		glColor3f(.33,.666,.9);
 		//left
-		glVertex3f(0,0,-1);
-		glVertex3f(0,h_w,-1);
-		glVertex3f(w_w,0,1);
-		glVertex3f(w_w,h_w,1);
+		/*
+		The current texture coordinates are part of the data that is associated with each vertex and with the current raster position. Initially, the values for s, t, r, and q are (0, 0, 0, 1).
+
+		*/
+		glTexCoord3f( 0,0,-1); glVertex3f(0,0,-1);
+		glTexCoord3f( 0,h_w,-1 );glVertex3f(0,h_w,-1);
+		glTexCoord3f( w_w,0,1 );glVertex3f(w_w,0,1);
+		glTexCoord3f( w_w,h_w,1 );glVertex3f(w_w,h_w,1);
 
 		//bottom
 		glColor3f(0.1,0.5,0.4);
+
 		glVertex3f(0, h_w, -2); 
 		glVertex3f(w_w, h_w, -2); 
 		glVertex3f(w_w, h_w, 2); 
@@ -110,9 +126,16 @@ static void DrawTunnel(void){
 		//Left 
 	glEnd();
 	glPopMatrix();
+	ilDeleteImages  (1, &TextureID);
 }
 
 void Drive::StartGame(void){
+  	ilInit();
+	if (ilGetError() != IL_NO_ERROR) 
+	  fprintf (stderr,"Devil Error (ilInit)");
+	
+
+	ilClearColour( 255, 255, 255, 000 );
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
 	SDL_GL_SetSwapInterval(1);	//Vertical Sync

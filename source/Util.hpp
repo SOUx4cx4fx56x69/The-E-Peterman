@@ -7,6 +7,12 @@
 #include <SDL2/SDL_mixer.h>
 #include<string>
 
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 namespace Util{
 	extern const char * ReadFile(const char * path);
@@ -42,6 +48,10 @@ namespace Util{
 		std::string GetButton(void);
 	}//Buttons
 	namespace textures{
+	namespace GL{
+
+		GLuint LoadTexture(const char * path);
+		}
 		namespace images{
 			SDL_Texture * LoadImageAsTexture(const char*, IMG_InitFlags flags=(IMG_InitFlags)0, SDL_Renderer * rend=mrenderer );
 			SDL_Texture * LoadImageAsTexture(SDL_Surface * surf, SDL_Renderer * rend=mrenderer);

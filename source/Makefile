@@ -1,7 +1,7 @@
 COMPILER=g++
 NOTHOMEFLAGS=-I../ForCompiler/include -L../ForCompiler/lib/ -m32
 FLAGS= -O2 -static-libstdc++ -static-libgcc -g3 -ggdb 
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lglut -lGLU \
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lglut -lGLU -lIL -lILUT \
 #-lpthread
 EXITNAME=Check
 OBJS = main.o Util.o Game.o menu.o

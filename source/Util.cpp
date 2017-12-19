@@ -89,6 +89,36 @@ namespace Util{
 
 
 namespace textures{
+	namespace GL{
+
+		GLuint LoadTexture(const char * path ){
+
+    			ILuint imgID = 0;
+			ILuint textureId;
+			ilGenImages(1, &imgID);
+			ilBindImage(imgID);
+			ilLoadImage("textures/floor.tga");
+			ilutRenderer(ILUT_OPENGL);  // Switch the renderer
+
+			ilConvertImage( IL_RGBA, IL_UNSIGNED_BYTE );
+		
+			
+			glGenTextures( 1, &textureId );
+			glBindTexture( GL_TEXTURE_2D, textureId );
+		
+			glTexImage2D( GL_TEXTURE_2D, 
+			0, 
+			GL_RGBA,
+			(GLuint)ilGetInteger( IL_IMAGE_WIDTH ),
+ 			(GLuint)ilGetInteger( IL_IMAGE_HEIGHT ),
+			 0, GL_RGBA,
+			 GL_UNSIGNED_BYTE, (GLuint*)ilGetData() );
+
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+			ilDeleteImages  (1, &imgID);
+			return textureId;
+		}
+	}
 	namespace images{
 		SDL_Texture * 
 		LoadImageAsTexture(const char*path, IMG_InitFlags flags, SDL_Renderer * rend){
