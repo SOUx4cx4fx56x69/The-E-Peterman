@@ -73,6 +73,45 @@ void Drive::InitKeys(void){
 	free(fKeys);
 }
 
+static void DrawTunnel(void){
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glPushMatrix();
+	glBegin(GL_QUADS);
+		glColor3f(.33,.666,.9);
+		//left
+		glVertex3f(0,0,-1);
+		glVertex3f(0,h_w,-1);
+		glVertex3f(w_w,0,1);
+		glVertex3f(w_w,h_w,1);
+
+		//bottom
+		glColor3f(0.1,0.5,0.4);
+		glVertex3f(0, h_w, -2); 
+		glVertex3f(w_w, h_w, -2); 
+		glVertex3f(w_w, h_w, 2); 
+		glVertex3f(0, 0, 2);
+		
+		//right
+		glColor3f(0.32,0.42,.32);
+		glVertex3f(w_w,h_w,-2); // right bottom FAR
+		glVertex3f(w_w,0,-2); // right top FAR
+		glVertex3f(0,h_w,2); // right top near
+		glVertex3f(w_w,h_w,0); // right bottom near
+
+		//top
+		glColor3f(0.31,0.32,.32);
+		glVertex3f(0,0,-2);
+		glVertex3f(w_w,0,-2);
+		glVertex3f(0,h_w,2);
+		glVertex3f(w_w,h_w,2);
+		
+		//glLoadIdentity();
+		//Left 
+	glEnd();
+	glPopMatrix();
+}
+
 void Drive::StartGame(void){
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
@@ -97,9 +136,9 @@ void Drive::StartGame(void){
 
 
 
+	
 
-
-	glClearColor(0, 0.3, 0.3, 1);
+	glClearColor(0.7, 0.6, 0.5, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -107,40 +146,13 @@ void Drive::StartGame(void){
 
 	glMatrixMode(GL_MODELVIEW);
 
-	for(unsigned int i = 0;i < h_w;i++){
-		
-		
-		//glLoadIdentity();
-		glColor3f(rand()%2,rand()%2,rand()%2);
-		glLineWidth(0.666);
+	//glViewport(x,y,w,h);
 
-		glTranslatef(0, i, 0);
-		
-		glPushMatrix();
-		glBegin(GL_LINES);
-			glVertex2f(0,0);
-			glVertex2f(w_w,0);
-		glEnd();
-		glPopMatrix();
-		glFlush();
-	}
-	glLoadIdentity();
-	for(unsigned int i = 0;i < w_w;i++){
+	
+	DrawTunnel();
+	
 
-		glColor3f(rand()%2,rand()%2,rand()%2);
-		glLineWidth(0.666);
-
-		glTranslatef(i, 0, 0);
-		
-		glPushMatrix();
-		glBegin(GL_LINES);
-			glVertex2f(0,0);
-			glVertex2f(0,h_w);
-		glEnd();
-		glPopMatrix();
-		glFlush();
-	}
-
+	//glTranslated(-w_w,0,0);
 	SDL_RenderPresent(mrenderer);
 
 	GLenum glError = glGetError();
@@ -149,7 +161,9 @@ void Drive::StartGame(void){
 	
 	
 //	SDL_GL_SwapWindow(m_window); // Swap Window
-	SDL_Delay(2000);
+
+	Util::Buttons::GetButton();
+	SDL_Delay(1000);
 	SDL_GL_DeleteContext(glcontext); //Delete Context
 	
 }
