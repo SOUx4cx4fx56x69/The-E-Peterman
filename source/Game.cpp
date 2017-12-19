@@ -13,9 +13,15 @@
 
 namespace GameDrive{
 
-typedef enum{
-Top, Left, Bottom, Right, Action, Jump
-}GameKeysEnum;
+
+
+
+const std::string difficulty[DifficultyCount]{
+"noob","normal","hard"
+};
+
+unsigned char dif;
+
 const std::string NameKeys[CountGameKey]{
 "Forward",
 "Left",
@@ -80,7 +86,7 @@ void Drive::StartGame(void){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 			
 //	SDL_SetRenderDrawColor(mrenderer, 30,40,30,20);
 //	SDL_RenderClear(mrenderer);
@@ -101,11 +107,11 @@ void Drive::StartGame(void){
 
 	glMatrixMode(GL_MODELVIEW);
 
-	for(unsigned int i = 0;i<100;i++){
+	for(unsigned int i = 0;i < h_w;i++){
 		
 		
 		//glLoadIdentity();
-		glColor3f(0.3,0.3,1);
+		glColor3f(rand()%2,rand()%2,rand()%2);
 		glLineWidth(0.666);
 
 		glTranslatef(0, i, 0);
@@ -114,6 +120,22 @@ void Drive::StartGame(void){
 		glBegin(GL_LINES);
 			glVertex2f(0,0);
 			glVertex2f(w_w,0);
+		glEnd();
+		glPopMatrix();
+		glFlush();
+	}
+	glLoadIdentity();
+	for(unsigned int i = 0;i < w_w;i++){
+
+		glColor3f(rand()%2,rand()%2,rand()%2);
+		glLineWidth(0.666);
+
+		glTranslatef(i, 0, 0);
+		
+		glPushMatrix();
+		glBegin(GL_LINES);
+			glVertex2f(0,0);
+			glVertex2f(0,h_w);
 		glEnd();
 		glPopMatrix();
 		glFlush();
@@ -127,7 +149,7 @@ void Drive::StartGame(void){
 	
 	
 //	SDL_GL_SwapWindow(m_window); // Swap Window
-	SDL_Delay(1000);
+	SDL_Delay(2000);
 	SDL_GL_DeleteContext(glcontext); //Delete Context
 	
 }

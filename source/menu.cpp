@@ -222,6 +222,89 @@ ButtonsCoords=0;
 
 }
 
+static void SetLevel(void){
+unsigned char menuItem = 0;
+SDL_Surface * Text;
+SDL_Event e;
+bool ButtonsInited = false, menu=true;
+const unsigned int H = (h_w/GameDrive::DifficultyCount);
+
+ButtonsCoords = new SDL_Rect[GameDrive::DifficultyCount];
+
+
+while(menu){
+
+	for(unsigned char i = GameDrive::DifficultyCount; i--;){
+		if( i == menuItem)	
+			Text = TTF_RenderUTF8_Blended_Wrapped(GameFont, 
+				GameDrive::difficulty[i].c_str(), MenuColor_Selected,w_w);
+		else
+			Text = TTF_RenderUTF8_Blended_Wrapped(GameFont, 
+				GameDrive::difficulty[i].c_str(), MenuColor_NotSelected, w_w);
+		if(!ButtonsInited){
+			ButtonsCoords[i].x = w_w/2-Text->w;
+			ButtonsCoords[i].y = H+(H*i)/4;
+			ButtonsCoords[i].h = Text->h;
+			ButtonsCoords[i].w = Text->w;
+		}
+		Util::images::putimage(Text, ButtonsCoords[i].x, ButtonsCoords[i].y , 0, 0, w_w, h_w);
+		SDL_FreeSurface(Text);
+	}
+	SDL_UpdateWindowSurface(m_window);
+	SDL_PollEvent(&e); // event	
+	switch(e.type){ // event switch
+		case SDL_MOUSEMOTION:
+			for(unsigned short i = GameDrive::DifficultyCount;i--;){
+				if( MOUSECHECK(e, motion, ButtonsCoords, i) ){
+					menuItem = i;
+					break;
+				}
+			}
+			break;
+		case SDL_KEYDOWN: 
+		 if(e.key.keysym.scancode != SDL_GetScancodeFromKey(e.key.keysym.scancode)){
+			 std::string MenuKey = SDL_GetKeyName(e.key.keysym.sym);
+			 printf("MENU KEY: %s\n", MenuKey.c_str());
+			 if(MenuKey == "Escape") menu=false;
+			 else if(MenuKey == "Return"){
+				GameDrive::dif=menuItem;
+				menu=false;
+				break;
+			 }else if(MenuKey == "W" || MenuKey == "Up") {//elseif
+				if(menuItem)
+					 menuItem--;
+			}else if(MenuKey == "S" || MenuKey == "Down"){
+			 	if(menuItem < GameDrive::CountGameKey) 
+					menuItem++;
+			}//elseif
+			
+		  } //if (e.key...
+			e.key.keysym.scancode=(SDL_Scancode)0;
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			for(unsigned short i = GameDrive::DifficultyCount;i--;){
+					if( MOUSECHECK(e, motion, ButtonsCoords, i) ){
+						menu=false;
+						break;
+					}
+				}
+			break;
+		case SDL_QUIT:
+			printf("Quit after %d ticks\n",e.quit.timestamp);
+			GAMEEXIT;
+			break;
+		default:
+			break;
+		}
+}
+ButtonsCoords=0;
+
+
+      
+
+
+}
+
 inline static void WriteHelp(void){
 StaticMenu("|continue|","Menu/Files/Help.msg");
 }inline static void WriteAbout(void){
@@ -355,6 +438,7 @@ void * StartMenu(bool InGame){
 	SDL_FillRect( m_surface, NULL, SDL_MapRGB( m_surface->format, BACKGROUND ) );
 	switch(MenuItem){	
 		case Game:
+			SetLevel();
 			return (void*)0;
 			break;
 		case Help:
