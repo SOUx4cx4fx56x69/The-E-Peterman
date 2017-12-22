@@ -76,60 +76,134 @@ void Drive::InitKeys(void){
 	free(fKeys);
 }
 
+static inline void DrawDoors(GLdouble x, GLdouble y, GLdouble z){
 
-static void DrawTunnel(void){
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
+
+		glTranslatef(x,y,z);
+
+		glPushMatrix();
+		glBegin(GL_QUADS);
+		glEnd();
+		glPopMatrix();
+	
+}
+
+static inline void InitRoom(void){
 
 	GLuint TextureID = Util::textures::GL::LoadTexture("textures/floor.tga");
 	glBindTexture( GL_TEXTURE_2D, TextureID );
 
-
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glPushMatrix();
-	glBegin(GL_QUADS);
-		glColor3f(.33,.666,.9);
-		//left
-		/*
-		The current texture coordinates are part of the data that is associated with each vertex and with the current raster position. Initially, the values for s, t, r, and q are (0, 0, 0, 1).
+	//glPolygonMode(GL_FRONT, GL_LINE);
 
-		*/
-		glTexCoord3f( 0,0,-1); glVertex3f(0,0,-1);
-		glTexCoord3f( 0,h_w,-1 );glVertex3f(0,h_w,-1);
-		glTexCoord3f( w_w,0,1 );glVertex3f(w_w,0,1);
-		glTexCoord3f( w_w,h_w,1 );glVertex3f(w_w,h_w,1);
+	glTranslatef(-0.5,-0.5,0);
+	glScalef(1,1,1);
 
-		//bottom
-		glColor3f(0.1,0.5,0.4);
+	glNewList(1, GL_COMPILE);
+		glBegin(GL_QUADS);
+			glColor3f(.33,.666,.9);
+			//left
+			/*
+			The current texture coordinates are part of the data that is associated with each vertex and with the current raster position. Initially, the values for s, t, r, and q are (0, 0, 0, 1).
 
-		glVertex3f(0, h_w, -2); 
-		glVertex3f(w_w, h_w, -2); 
-		glVertex3f(w_w, h_w, 2); 
-		glVertex3f(0, 0, 2);
+			*/
+			//front
+			glTexCoord3f( 0, 0, -1); 
+			glVertex3f(0, 0, -1);
+
+			glTexCoord3f( 1.0f, 0.0f, -1 );
+			glVertex3f( 1.0f, 0.0f, -1);
+
+			glTexCoord3f( 1.0f, 1.0f, 1 );
+			glVertex3f(1.0f, 1.0f, 1);
+
+			glTexCoord3f( 0.0f, 1.0f, 1 );
+			glVertex3f(0.0f, 1.0f, 1);	
+
+			//left
+			glColor4ub(255,0,0,255);		
+			glVertex3f(0, 1, 0);glTexCoord3f( -2, 1, 0 );	
+			glVertex3f(-1, 2, 0);glTexCoord3f( 2, 2, 0 );
+			glVertex3f(-1, -1, 1);glTexCoord3f( 2, -1, 1 );
+			glVertex3f(0, 0, 1);glTexCoord3f( -2, 0, 1 );
+	
+			//bottom
 		
-		//right
-		glColor3f(0.32,0.42,.32);
-		glVertex3f(w_w,h_w,-2); // right bottom FAR
-		glVertex3f(w_w,0,-2); // right top FAR
-		glVertex3f(0,h_w,2); // right top near
-		glVertex3f(w_w,h_w,0); // right bottom near
+			glColor3ub(0,0,255);
 
-		//top
-		glColor3f(0.31,0.32,.32);
-		glVertex3f(0,0,-2);
-		glVertex3f(w_w,0,-2);
-		glVertex3f(0,h_w,2);
-		glVertex3f(w_w,h_w,2);
-		
-		//glLoadIdentity();
-		//Left 
-	glEnd();
-	glPopMatrix();
+			glVertex3f(0, 0, -1); glTexCoord3f(0,0,-1);
+			glVertex3f(1, 0, -1); glTexCoord3f(1,0,-1);
+
+			glVertex3f(2, -1, 1); glTexCoord3f(2,-1,1);						
+			glVertex3f(-1, -1, 1); glTexCoord3f(-1,-1,1);
+
+
+			glColor3ub(0,255,0);
+			
+			//right
+		       	glVertex3f(1, 0, 0); glTexCoord3f(0,0,1);
+			glVertex3f(2, -1, 1); glTexCoord3f(1,-0,1);
+
+			glVertex3f(2, 2, 1); glTexCoord3f(2,-1,1);
+			glVertex3f(1, 1, 0); glTexCoord3f(-1,-1,0);		
+				
+		glEnd();
+/*
+		glBegin(GL_LINES);
+						glColor4ub(255,0,0,255);			
+						glVertex3f(0.0, 1, -1);
+
+						glColor3ub(0,255,0);
+						glVertex3f(-1, 2, 1);
+			
+						glColor3ub(255,0,255);
+									
+						glVertex3f(0, 0, -1);
+						glVertex3f(-1, -1, 1);
+						
+						glVertex3f(1, 0, 0);
+						glVertex3f(2, -1, 1);
+
+						glVertex3f(1, 1, 0);
+						glVertex3f(2, 2, 1);
+						
+
+			
+
+		glEnd();
+*/
+	glEndList();
+	
+
 	ilDeleteImages  (1, &TextureID);
+
+}
+static inline void DrawTunnel(void){
+
+	glMatrixMode(GL_PROJECTION);
+	gluLookAt(
+		1.0,1.0,0.0, // x,y,z eye  
+		1.0,1.0,1.0, // Center 
+		0,1,0);
+	glMatrixMode(GL_MODELVIEW);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPushMatrix();
+		glCallList(1);
+	glPopMatrix();
+	glLoadIdentity();
+
 }
 
 void Drive::StartGame(void){
+
+	//Light work which materials...
+
+	GLdouble OffsetX=0, OffsetY=0, OffsetZ=0;
   	ilInit();
 	if (ilGetError() != IL_NO_ERROR) 
 	  fprintf (stderr,"Devil Error (ilInit)");
@@ -139,7 +213,7 @@ void Drive::StartGame(void){
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
 	SDL_GL_SetSwapInterval(1);	//Vertical Sync
-
+	
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST); 
 	glShadeModel(GL_SMOOTH);
@@ -147,7 +221,8 @@ void Drive::StartGame(void){
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
+	
+	InitRoom();
 	//glEnable(GL_LIGHTING);
 			
 //	SDL_SetRenderDrawColor(mrenderer, 30,40,30,20);
@@ -161,19 +236,21 @@ void Drive::StartGame(void){
 
 	
 
-	glClearColor(0.7, 0.6, 0.5, 1);
+	glClearColor(0.2, 0.2, 0.2, 0.5);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	glOrtho(0, w_w, h_w, 0, 2, -2);
+	//glOrtho(0, w_w, h_w, 0, 2, -2);
 
 	glMatrixMode(GL_MODELVIEW);
 
 	//glViewport(x,y,w,h);
 
-	
+	glTranslatef(1,1,0);
+
 	DrawTunnel();
 	
+
 
 	//glTranslated(-w_w,0,0);
 	SDL_RenderPresent(mrenderer);

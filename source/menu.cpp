@@ -274,7 +274,7 @@ while(menu){
 				if(menuItem)
 					 menuItem--;
 			}else if(MenuKey == "S" || MenuKey == "Down"){
-			 	if(menuItem < GameDrive::CountGameKey) 
+			 	if(menuItem < GameDrive::DifficultyCount-1) 
 					menuItem++;
 			}//elseif
 			

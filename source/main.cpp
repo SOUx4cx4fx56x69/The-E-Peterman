@@ -9,8 +9,7 @@
 #include<stdlib.h>
 
 #include<time.h>
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+
 
 SDL_Window * m_window;
 SDL_Surface * m_surface;
@@ -62,7 +61,7 @@ int main(int argc, char ** arguments){
 #endif
 //	pthread_t CursorThread;
 	srand(time(NULL));
-	
+
 	init_graph();
 	//void * (*CursorThread)(void*);
 	SDL_Surface * cursor = Util::images::loadimage("textures/cursor.png", IMG_INIT_PNG);
