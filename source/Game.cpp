@@ -78,15 +78,20 @@ void Drive::InitKeys(void){
 
 static inline void DrawDoors(GLdouble x, GLdouble y, GLdouble z){
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 
+		glLoadIdentity();
+		
+		glMatrixMode(GL_PROJECTION);
 
 		glTranslatef(x,y,z);
+		glMatrixMode(GL_MODELVIEW);
+		
+
+
+
 
 		glPushMatrix();
-		glBegin(GL_QUADS);
-		glEnd();
+			glCallList(2);
 		glPopMatrix();
 	
 }
@@ -177,6 +182,62 @@ static inline void InitRoom(void){
 		glEnd();
 */
 	glEndList();
+	glNewList(2,GL_COMPILE);
+		glBegin(GL_QUADS);
+		glColor3ub(0,0,0);
+			
+			//first Door
+
+			glVertex3f(0,0,0);
+			glVertex3f(0.25,0,1);
+			glVertex3f(0.25,-0.5,1);
+			glVertex3f(0,-0.5,1);
+			
+			//Two Door
+
+			glVertex3f(1.0, 0, 1);
+			glVertex3f(0.8, 0, 1);
+
+			glVertex3f(0.8, -0.8, 1);
+			glVertex3f(1, -1, 1);
+			
+			// three door
+			glVertex3f(-0.8, 0, 1);
+			glVertex3f(-0.8, -0.8, 1);
+
+			glVertex3f(-1.2, -1.2, 1);
+			glVertex3f(-1.2, 0, 1);
+
+		glEnd();
+		glBegin(GL_LINES);
+			glColor3f(1.0, 1.0, 1.0);
+			//first Door
+			glVertex3f(0.0, 0, 0);
+			glVertex3f(0.25, 0, 1);
+			
+			glVertex3f(0.25, 0, 1);
+			glVertex3f(0.25, -0.5, 1);
+			
+			glVertex3f(0, 0, 1);
+			glVertex3f(0, -0.5, 1);
+
+
+			//two Door
+			glVertex3f(1.0, 0, 1);
+			glVertex3f(0.8, 0, 1);
+
+			glVertex3f(0.8, 0, 1);
+			glVertex3f(0.8, -0.8, 1);
+			//three door
+			glVertex3f(-0.8, 0, 1);
+			glVertex3f(-0.8, -0.8, 1);
+
+			glVertex3f(-0.8, 0, 1);
+			glVertex3f(-1.2, 0, 1);
+			
+			
+		glEnd();
+	glEndList();
 	
 
 	ilDeleteImages  (1, &TextureID);
@@ -249,7 +310,7 @@ void Drive::StartGame(void){
 	glTranslatef(1,1,0);
 
 	DrawTunnel();
-	
+	DrawDoors(1,1,0);
 
 
 	//glTranslated(-w_w,0,0);
