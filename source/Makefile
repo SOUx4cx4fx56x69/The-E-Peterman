@@ -1,7 +1,7 @@
 COMPILER=g++
 NOTHOMEFLAGS=-I../ForCompiler/include -L../ForCompiler/lib/ -m32
-FLAGS= -O2 -static-libstdc++ -static-libgcc -g3 -ggdb 
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lglut -lGLU -lIL -lILUT \
+FLAGS= -I/usr/include/freetype2 -O2 -static-libstdc++ -static-libgcc -g3 -ggdb
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lglut -lGLU -lIL -lILUT -lfreetype \
 #-lpthread
 EXITNAME=Check
 OBJS = main.o Util.o Game.o menu.o
@@ -21,7 +21,7 @@ main.o: main.cpp main.hpp
 	$(COMPILER) -c main.cpp $(FLAGS) $(LIBS) 
 
 Game.o: Game.cpp Game.hpp
-	$(COMPILER) -c Game.cpp $(FLAGS) $(LIBS) 
+	$(COMPILER) -c Game.cpp $(FLAGS) $(LIBS) -
 
 
 CompileNotLinked: $(OBJS)

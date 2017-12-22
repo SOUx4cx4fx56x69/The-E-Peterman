@@ -12,9 +12,29 @@
 
 
 
+
+
 #include<unistd.h>
 
 namespace GameDrive{
+
+namespace FreeType{
+FT_Face InitFace(const char * fontName, unsigned short height){
+ FT_Library library;
+ if (FT_Init_FreeType( &library ))
+	{
+		fprintf(stderr, "Error with FreeType init library\n");
+		GAMEEXIT;
+	}
+ 	FT_Face face;
+	if (FT_New_Face( library, fontName, 0, &face )) {
+		fprintf(stderr, "Error with FreeType New Face\n");
+		GAMEEXIT;
+	}
+	return face;
+}
+
+};
 
 
 
@@ -107,7 +127,8 @@ static inline void InitRoom(void){
 
 	glTranslatef(-0.5,-0.5,0);
 	glScalef(1,1,1);
-
+	
+	//Room
 	glNewList(1, GL_COMPILE);
 		glBegin(GL_QUADS);
 			glColor3f(.33,.666,.9);
@@ -182,6 +203,7 @@ static inline void InitRoom(void){
 		glEnd();
 */
 	glEndList();
+	//Doors
 	glNewList(2,GL_COMPILE);
 		glBegin(GL_QUADS);
 		glColor3ub(0,0,0);
@@ -237,6 +259,31 @@ static inline void InitRoom(void){
 			
 			
 		glEnd();
+	glEndList();
+
+	//Book
+	glNewList(3,GL_COMPILE);
+		glBegin(GL_LINES);
+			glVertex3f(-0, -0.75, 1);
+			glVertex3f(0.3, -0.75, 1);
+			
+			glVertex3f(0.3,-0.75,1);
+			glVertex3f(0.3,-0.65,1);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		
+			glVertex3f(-0, -0.65, 1);
+			glVertex3f(0, -0.75, 1);
+
+			glVertex3f(0.3, -0.75, 1);			
+			glVertex3f(0.3,-0.65,1);
+
+		glEnd();
+
+
+			
+
 	glEndList();
 	
 
@@ -310,8 +357,26 @@ void Drive::StartGame(void){
 	glTranslatef(1,1,0);
 
 	DrawTunnel();
-	DrawDoors(1,1,0);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	
+
+	DrawDoors(1,1,0);
+	glCallList(3);
+	glDisable(GL_BLEND);
+/*
+	SDL_Surface * CheckText = TTF_RenderUTF8_Blended(GameFont, "Check", {255,0,0});
+	SDL_Texture * Check_Text = SDL_CreateTextureFromSurface(mrenderer,CheckText);
+	SDL_FreeSurface(CheckText);
+
+	SDL_Rect Coords = {w_w/2,h_w/2,255,255};	
+	SDL_RenderCopy(mrenderer, Check_Text, NULL, &Coords);
+*/
+//	SDL_BlitSurface(m_surface, NULL, CheckText, NULL);
+
+	
 
 	//glTranslated(-w_w,0,0);
 	SDL_RenderPresent(mrenderer);
