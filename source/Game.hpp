@@ -1,7 +1,9 @@
 #pragma once
 #include<string>
 #define KEYSPATH "Settings/Keys.bnd"
+#define ROTORMOVING 255
 #define MOVINGGAME 2
+#define MAXNUMBERROTOR 1000
 
 #include <ft2build.h>
 #include <freetype/freetype.h>
@@ -39,6 +41,17 @@ Drive(void);
 namespace FreeType{
 	FT_Face InitFace(const char * fontName, unsigned short height);
 
+};
+
+namespace Crypto{
+	namespace Rotor{
+		char * RotoPhrase(const char * what, unsigned char count=ROTORMOVING);
+		unsigned long _strlen_( const char * p);
+		template <class T> void shuffle(void * arr, unsigned int index0, unsigned int index1);
+	};
+	namespace Numbers{
+		char * convertNumberToPhrases(unsigned long long number=rand()%MAXNUMBERROTOR);
+	};
 };
 
 };

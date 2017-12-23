@@ -61,7 +61,13 @@ int main(int argc, char ** arguments){
 #endif
 //	pthread_t CursorThread;
 	srand(time(NULL));
-
+/*
+	printf("%s\n",
+		GameDrive::Crypto::Rotor::RotoPhrase(
+			GameDrive::Crypto::Numbers::convertNumberToPhrases() )	
+										);//printf
+	exit(0);
+*/
 	init_graph();
 	//void * (*CursorThread)(void*);
 	SDL_Surface * cursor = Util::images::loadimage("textures/cursor.png", IMG_INIT_PNG);

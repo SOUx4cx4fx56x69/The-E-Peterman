@@ -16,7 +16,144 @@
 
 #include<unistd.h>
 
+#define REVERSESTRING(str){\
+	char * tmpStr = malloc(GameDrive::Crypto::Rotor::_strlen_(str));\
+	void * ftmpStr=tmpStr;\
+	void *fStr = str;\
+	while(*str) *tmpStr++=*str++;\
+	str = fStr;\
+	while(tmpStr != ftmpStr) *str++=*tmpStr--;\
+	free(tmpStr);\
+}
+
+#define COTENATION(array, phrase, sizeArray){\
+	if(sizeArray < GameDrive::Crypto::Rotor::_strlen_(phrase) > sizeArray){\
+		sizeArray += GameDrive::Crypto::Rotor::_strlen_(phrase) - sizeArray;\
+		array = (char*)realloc(array, sizeArray);\
+	}\
+		{\
+		register unsigned long i = 0;\
+		puts(phrase);\
+		while(*array) *array++;\
+		while(phrase[i]) *array++ = (phrase[i++]);\
+		}\
+}
+
 namespace GameDrive{
+
+
+
+namespace Crypto{
+	namespace Numbers{
+		typedef unsigned long long ull;
+		char * convertNumberToPhrases(unsigned long long number){
+			unsigned long alloced, used=0;
+		
+			alloced = number/10 + 1;
+
+			char * result = (char*)malloc(sizeof(ull)*alloced);
+			void * fresult = result;
+			register unsigned char num;
+			while(number){
+				if( used + 1 > alloced ){
+					result = (char*)realloc(result, alloced+1);
+					alloced+=1;
+				}
+				num = number % 10;
+				switch(num){
+					case 0:
+						COTENATION(result, "zero", alloced);
+						break;
+					case 1:
+						COTENATION(result, "one", alloced);
+						break;
+					case 2:
+						COTENATION(result, "two", alloced);
+						break;
+					case 3:
+						COTENATION(result, "three", alloced);
+						break;
+					case 4:
+						COTENATION(result, "four", alloced);
+						break;
+					case 5:
+						COTENATION(result, "five", alloced);
+						break;
+					case 6:
+						COTENATION(result, "six", alloced);
+						break;
+					case 7:
+						COTENATION(result, "seven", alloced);
+						break;
+					case 8:
+						COTENATION(result, "eight", alloced);
+						break;
+					case 9:
+						COTENATION(result, "nine", alloced);
+						break;
+					default:
+						break;
+				}
+				used++;
+				number/=10;
+
+			}
+			while(*result)*result++;
+			*result='\0';
+			return (char*)fresult;
+		}
+	};
+
+	namespace Rotor{
+		unsigned long _strlen_( const char * p){
+			unsigned long r = 0;
+			while(*p++) r++;
+			return r;
+		}
+
+		template <class T> void shuffle(T * arr, unsigned int index0, unsigned int index1){
+				//printf("%d %d\n",index0,index1);
+				T tmp = arr[index0];
+				arr[index0]=arr[index1];
+				arr[index1]=tmp;
+				//printf("Shuffle: %s\n", arr);
+		}
+
+
+		char * RotoPhrase(const char * what, unsigned char count){
+			unsigned long sphrase = _strlen_(what);
+			char * result = (char*)malloc( sphrase+1 ); // char 1 byte, then sizeof don't need
+			void * fresult = result;
+			while( *what )
+				if(*what == ' ') {*what++;continue;}
+				else *result++=*what++;// Copy full.
+			*result++='\0';
+			result=(char*)fresult;
+			register unsigned int tmpi;		
+			printf("Copy: %s\n",result);	
+			for(count;count--;){
+				tmpi= rand()%sphrase + 1;
+				if( !result[tmpi]  ){
+					count++;
+					continue;
+				}
+				if(tmpi - 1 < 0)
+				 shuffle<char>(result, tmpi, tmpi+1);
+				else if(tmpi + 1 < sphrase)
+				 shuffle<char>(result, tmpi, tmpi-1);	
+				else
+				{
+					count++;
+					continue;
+				}
+			}
+			return result;
+			
+		}
+	};
+};
+
+
 
 namespace FreeType{
 FT_Face InitFace(const char * fontName, unsigned short height){
@@ -308,6 +445,8 @@ static inline void DrawTunnel(void){
 }
 
 void Drive::StartGame(void){
+
+	
 
 	//Light work which materials...
 
