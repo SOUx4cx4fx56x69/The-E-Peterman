@@ -39,6 +39,7 @@ private:
 	void InitKeys(void);
 	ull WinRoom;
 protected:
+	void OpenShipher(void);
 	void InitIL();
 public:
 	void InitLevels(void);

@@ -9,12 +9,7 @@
 	#include<string.h>
 #endif
 
-#define MOUSECHECK(event, type, buttons_rect,i)\
-				event.type.x  >= buttons_rect[i].x  &&  \
-				event.type.x <= buttons_rect[i].x + buttons_rect[i].w\
-				&& \
-				event.type.y  >= buttons_rect[i].y &&\
-				event.type.y <= buttons_rect[i].y + buttons_rect[i].h
+
 
 
 #define SETTINGKEY\

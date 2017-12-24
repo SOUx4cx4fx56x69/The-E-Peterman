@@ -46,10 +46,11 @@ namespace Crypto{
 		
 			alloced = number/10 + 1;
 
-			char * result = (char*)malloc(sizeof(ull)*alloced);
+			char * result = (char*)calloc(sizeof(ull)*alloced,1);
 			void * fresult = result;
 			register unsigned char num;
 			while(number){
+				//printf("%s\n",(char*) fresult);
 				if( used + 1 > alloced ){
 					result = (char*)realloc(result, alloced+1);
 					alloced+=1;
@@ -93,8 +94,11 @@ namespace Crypto{
 				number/=10;
 
 			}
+
 			while(*result)*result++;
+
 			*result='\0';
+
 			return (char*)fresult;
 		}
 	};
@@ -127,7 +131,9 @@ namespace Crypto{
 			register unsigned int tmpi;		
 			printf("Copy: %s\n",result);	
 			for(count;count--;){
-				tmpi= rand()%sphrase + 1;
+				
+				tmpi= ( rand()%sphrase ) + 1 ;
+				
 				if( !result[tmpi]  ){
 					count++;
 					continue;
@@ -484,6 +490,50 @@ void Drive::InitLevels(void){
 
 }
 
+void Drive :: OpenShipher(){
+	const char * Number = GameDrive::Crypto::Numbers::convertNumberToPhrases(WinRoom) ;
+
+	const char * Phrase = GameDrive::Crypto::Rotor::RotoPhrase( Number );
+	ull CountLettersOfPhrase = GameDrive::Crypto::Rotor::_strlen_(Phrase);
+
+	SDL_Rect paperRect = {w_w/4 + w_w/10, 0, w_w/2,h_w};
+
+	SDL_SetRenderDrawColor(mrenderer, BACKGROUND, 255);
+
+	SDL_RenderFillRect(mrenderer, NULL);
+
+	SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
+
+	SDL_Surface ** WinRoomText =  (SDL_Surface **)calloc(CountLettersOfPhrase, sizeof(SDL_Surface));
+	
+	
+	for(ull i = CountLettersOfPhrase; i--;){
+		
+		const char  tmp[] = {Phrase[i]};
+		WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, {255,255,255});
+		//SDL_BlitSurface
+		
+		SDL_Texture * WinRoomLetter = SDL_CreateTextureFromSurface(mrenderer, WinRoomText[i]);
+		SDL_RenderCopy(mrenderer, WinRoomLetter, NULL, NULL);
+		SDL_DestroyTexture(WinRoomLetter);
+	}
+
+	//SDL_Surface * WinRoomText = TTF_RenderUTF8_Blended_Wrapped(GameFont, \
+				Phrase, {0,0,0}, w_w/4 );
+	
+	SDL_RenderFillRect(mrenderer, &paperRect);
+	//SDL_UpdateWindowSurface(m_window);
+	SDL_RenderPresent(mrenderer);
+
+	for(ull i = CountLettersOfPhrase; i--;)
+		SDL_FreeSurface(WinRoomText[i]);
+
+	Util::Buttons::GetButton();
+
+	free((void*)Number);
+	free((void*)Phrase);
+}
+
 void Drive::StartGame(void){
 
 	//Light work which materials...
@@ -513,10 +563,7 @@ void Drive::StartGame(void){
 	
 	std::string Button;
 	
-	printf("%d\n", rooms[1]);
-
-
-	if( this->WinRoom ){
+	if( !this->WinRoom ){
 		WinRoom = *(this->rooms + (1 + rand()%3) ); 
 		puts("WinRoom inited");
 	}
@@ -542,6 +589,9 @@ void Drive::StartGame(void){
 
 	Button = Util::Buttons::GetButton();
 		if(Button == "Escape") StartMenu(true);
+		else if(Button == GameKeys[Action]){
+			OpenShipher();
+		}
 		
 	SDL_GL_DeleteContext(glcontext); //Delete Context
 	this->StartGame();

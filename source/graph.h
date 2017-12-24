@@ -14,6 +14,13 @@
 	SDL_Quit();\
 	exit(0);
 
+#define MOUSECHECK(event, type, buttons_rect,i)\
+				event.type.x  >= buttons_rect[i].x  &&  \
+				event.type.x <= buttons_rect[i].x + buttons_rect[i].w\
+				&& \
+				event.type.y  >= buttons_rect[i].y &&\
+				event.type.y <= buttons_rect[i].y + buttons_rect[i].h
+
 #define PUTBUTTON(text, Coords){\
 SDL_Surface * Button = TTF_RenderUTF8_Blended(GameFont, text, {41,255,42});\
 Coords[0].x=(w_w/2)+( SizeFont+FONTPAD*strlen(text) )/2;\
