@@ -471,10 +471,15 @@ static inline void DrawRoom(void){
 
 void Drive::InitLevels(void){
 
+	srand(time(NULL));
+	
 	this->rooms = (ull*) malloc(sizeof(ull) * 3 * 3 * dif);;
-	for( unsigned short i = 3 * 3 * dif; i--; ){
+
+	
+	for( unsigned short i = (3 * 3 * (dif+1) ); i--; ){
 		this->rooms[i] = (rand()%MAXNUMBERROTOR) + 1 ;
 	}
+
 	puts("Levels inited");
 
 }
@@ -508,12 +513,13 @@ void Drive::StartGame(void){
 	
 	std::string Button;
 	
-	printf("%d\n", *rooms);
+	printf("%d\n", rooms[1]);
 
-	puts("init winroom");
-	if( this->WinRoom )
+
+	if( this->WinRoom ){
 		WinRoom = *(this->rooms + (1 + rand()%3) ); 
-	
+		puts("WinRoom inited");
+	}
 	glMatrixMode(GL_PROJECTION);
 	gluLookAt(
 		1.0,1.0,0.0, // x,y,z eye  
