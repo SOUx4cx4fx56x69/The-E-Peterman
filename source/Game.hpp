@@ -38,6 +38,7 @@ private:
 	ull * rooms;
 	void InitKeys(void);
 	ull WinRoom;
+	char * Phrase;
 protected:
 	void OpenShipher(void);
 	void InitIL();

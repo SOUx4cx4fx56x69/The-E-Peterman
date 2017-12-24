@@ -211,7 +211,7 @@ void Drive::InitIL(void){
 Drive::Drive(void){
 	this->InitKeys();
 	this->InitIL();
-
+	this->Phrase=0;
 }
 
 void Drive::InitKeys(void){
@@ -491,38 +491,54 @@ void Drive::InitLevels(void){
 }
 
 void Drive :: OpenShipher(){
-	const char * Number = GameDrive::Crypto::Numbers::convertNumberToPhrases(WinRoom) ;
 
-	const char * Phrase = GameDrive::Crypto::Rotor::RotoPhrase( Number );
+
+	if(!this->Phrase){
+			const char * Number = GameDrive::Crypto::Numbers::convertNumberToPhrases(WinRoom) ;
+			this->Phrase = GameDrive::Crypto::Rotor::RotoPhrase( Number );
+			free((void*)Number);
+	}
+	
+
 	ull CountLettersOfPhrase = GameDrive::Crypto::Rotor::_strlen_(Phrase);
 
-	SDL_Rect paperRect = {w_w/4 + w_w/10, 0, w_w/2,h_w};
+	SDL_Rect * ButtonsCoords = new SDL_Rect[CountLettersOfPhrase];
 
-	SDL_SetRenderDrawColor(mrenderer, BACKGROUND, 255);
+	SDL_Rect paperRect = {w_w/4 + w_w/10, h_w/4, w_w/2,h_w/4};
+
+	SDL_SetRenderDrawColor(mrenderer, 120,120,120, 255);
 
 	SDL_RenderFillRect(mrenderer, NULL);
-
-	SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
 
 	SDL_Surface ** WinRoomText =  (SDL_Surface **)calloc(CountLettersOfPhrase, sizeof(SDL_Surface));
 	
 	
-	for(ull i = CountLettersOfPhrase; i--;){
-		
-		const char  tmp[] = {Phrase[i]};
-		WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, {255,255,255});
-		//SDL_BlitSurface
-		
-		SDL_Texture * WinRoomLetter = SDL_CreateTextureFromSurface(mrenderer, WinRoomText[i]);
-		SDL_RenderCopy(mrenderer, WinRoomLetter, NULL, NULL);
-		SDL_DestroyTexture(WinRoomLetter);
-	}
+
+
+
+	SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
+
+	int ButtonspPadding = (w_w/3)/CountLettersOfPhrase;
+
 
 	//SDL_Surface * WinRoomText = TTF_RenderUTF8_Blended_Wrapped(GameFont, \
 				Phrase, {0,0,0}, w_w/4 );
 	
 	SDL_RenderFillRect(mrenderer, &paperRect);
 	//SDL_UpdateWindowSurface(m_window);
+	for(int i = CountLettersOfPhrase; i--;){
+		
+		const char  tmp[] = {Phrase[i]};
+		WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, {255,255,255});
+		//SDL_BlitSurface
+		ButtonsCoords[i] = {(w_w/2)-(w_w/10)+ButtonspPadding*i,
+			  h_w/4 ,
+				 WinRoomText[i]->w, WinRoomText[i]->h};
+		SDL_Texture * WinRoomLetter = SDL_CreateTextureFromSurface(mrenderer, WinRoomText[i]);
+		SDL_RenderCopy(mrenderer, WinRoomLetter, NULL, &ButtonsCoords[i]);
+		SDL_DestroyTexture(WinRoomLetter);
+	}
+
 	SDL_RenderPresent(mrenderer);
 
 	for(ull i = CountLettersOfPhrase; i--;)
@@ -530,8 +546,8 @@ void Drive :: OpenShipher(){
 
 	Util::Buttons::GetButton();
 
-	free((void*)Number);
-	free((void*)Phrase);
+
+
 }
 
 void Drive::StartGame(void){
