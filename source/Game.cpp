@@ -6,15 +6,10 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-
-
-
-
-
-
-
+#include"menu.hpp"
 #include<unistd.h>
+
+
 
 #define REVERSESTRING(str){\
 	char * tmpStr = malloc(GameDrive::Crypto::Rotor::_strlen_(str));\
@@ -45,7 +40,7 @@ namespace GameDrive{
 
 namespace Crypto{
 	namespace Numbers{
-		typedef unsigned long long ull;
+
 		char * convertNumberToPhrases(unsigned long long number){
 			unsigned long alloced, used=0;
 		
@@ -200,8 +195,17 @@ std::string GameKeys[CountGameKey] = {
 "Space" // Jump
 };
 
+void Drive::InitIL(void){
+  	ilInit();
+	if (ilGetError() != IL_NO_ERROR) 
+	  fprintf (stderr,"Devil Error (ilInit)");
+	ilClearColour( 255, 255, 255, 000 );
+}
+
 Drive::Drive(void){
 	this->InitKeys();
+	this->InitIL();
+
 }
 
 void Drive::InitKeys(void){
@@ -262,8 +266,7 @@ static inline void InitRoom(void){
 	glLoadIdentity();
 	//glPolygonMode(GL_FRONT, GL_LINE);
 
-	glTranslatef(-0.5,-0.5,0);
-	glScalef(1,1,1);
+
 	
 	//Room
 	glNewList(1, GL_COMPILE);
@@ -428,35 +431,58 @@ static inline void InitRoom(void){
 
 }
 static inline void DrawTunnel(void){
-
-	glMatrixMode(GL_PROJECTION);
-	gluLookAt(
-		1.0,1.0,0.0, // x,y,z eye  
-		1.0,1.0,1.0, // Center 
-		0,1,0);
-	glMatrixMode(GL_MODELVIEW);
-
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPushMatrix();
 		glCallList(1);
 	glPopMatrix();
+
+
+}
+
+
+
+static inline void DrawRoom(void){
+
+	glClearColor(0.2, 0.4, 0.6, 0.5);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	glLoadIdentity();
+	glScalef(1,1,1);
+	glTranslatef(0.5,0.5,0);
+	//glOrtho(0, w_w, h_w, 0, 2, -2);
+
+
+
+	//glViewport(x,y,w,h);
+
+
+	DrawTunnel();
+
+	glEnable(GL_BLEND);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		DrawDoors(1,1,0);
+		glCallList(3);
+	glDisable(GL_BLEND);
+
+
+	SDL_RenderPresent(mrenderer);
+}
+
+void Drive::InitLevels(void){
+
+	this->rooms = (ull*) malloc(sizeof(ull) * 3 * 3 * dif);;
+	for( unsigned short i = 3 * 3 * dif; i--; ){
+		this->rooms[i] = (rand()%MAXNUMBERROTOR) + 1 ;
+	}
+	puts("Levels inited");
 
 }
 
 void Drive::StartGame(void){
 
-	
-
 	//Light work which materials...
-
-	GLdouble OffsetX=0, OffsetY=0, OffsetZ=0;
-  	ilInit();
-	if (ilGetError() != IL_NO_ERROR) 
-	  fprintf (stderr,"Devil Error (ilInit)");
-	
-
-	ilClearColour( 255, 255, 255, 000 );
+	//glEnable(GL_LIGHTING);
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
 	SDL_GL_SetSwapInterval(1);	//Vertical Sync
@@ -470,67 +496,49 @@ void Drive::StartGame(void){
 	glLoadIdentity();
 	
 	InitRoom();
-	//glEnable(GL_LIGHTING);
+
+
+
 			
 //	SDL_SetRenderDrawColor(mrenderer, 30,40,30,20);
 //	SDL_RenderClear(mrenderer);
 //	SDL
 
+	GLenum glError;
 	
-
-
-
-
+	std::string Button;
 	
+	printf("%d\n", *rooms);
 
-	glClearColor(0.2, 0.2, 0.2, 0.5);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	//glOrtho(0, w_w, h_w, 0, 2, -2);
-
+	puts("init winroom");
+	if( this->WinRoom )
+		WinRoom = *(this->rooms + (1 + rand()%3) ); 
+	
+	glMatrixMode(GL_PROJECTION);
+	gluLookAt(
+		1.0,1.0,0.0, // x,y,z eye  
+		1.0,1.0,1.0, // Center 
+		0,1,0);
 	glMatrixMode(GL_MODELVIEW);
 
-	//glViewport(x,y,w,h);
+ //*this->rooms
 
-	glTranslatef(1,1,0);
+	DrawRoom();
 
-	DrawTunnel();
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	
-
-	DrawDoors(1,1,0);
-	glCallList(3);
-	glDisable(GL_BLEND);
-/*
-	SDL_Surface * CheckText = TTF_RenderUTF8_Blended(GameFont, "Check", {255,0,0});
-	SDL_Texture * Check_Text = SDL_CreateTextureFromSurface(mrenderer,CheckText);
-	SDL_FreeSurface(CheckText);
-
-	SDL_Rect Coords = {w_w/2,h_w/2,255,255};	
-	SDL_RenderCopy(mrenderer, Check_Text, NULL, &Coords);
-*/
-//	SDL_BlitSurface(m_surface, NULL, CheckText, NULL);
-
-	
-
-	//glTranslated(-w_w,0,0);
-	SDL_RenderPresent(mrenderer);
-
-	GLenum glError = glGetError();
+	glError = glGetError();
 	if(glError != GL_NO_ERROR) printf("OpenGL error: %s\n", gluErrorString(glError));
+
+//rooms+=3;
 
 	
 	
 //	SDL_GL_SwapWindow(m_window); // Swap Window
 
-	Util::Buttons::GetButton();
-	SDL_Delay(1000);
+	Button = Util::Buttons::GetButton();
+		if(Button == "Escape") StartMenu(true);
+		
 	SDL_GL_DeleteContext(glcontext); //Delete Context
-	
+	this->StartGame();
 }
 
 }

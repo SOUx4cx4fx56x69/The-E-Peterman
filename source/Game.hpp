@@ -11,6 +11,8 @@
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
 
+typedef unsigned long long ull;
+
 namespace GameDrive{
 
 const unsigned char CountGameKey = 6;
@@ -28,13 +30,20 @@ extern const std::string NameKeys[CountGameKey];
 extern const std::string difficulty[DifficultyCount];
 extern unsigned char dif;
 
+
+
+
 class Drive{
 private:
-void InitKeys(void);
+	ull * rooms;
+	void InitKeys(void);
+	ull WinRoom;
 protected:
+	void InitIL();
 public:
-void StartGame(void);
-Drive(void);
+	void InitLevels(void);
+	void StartGame(void);
+	Drive(void);
 
 };
 

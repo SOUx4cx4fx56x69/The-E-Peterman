@@ -313,10 +313,17 @@ StaticMenu("|continue|","Menu/Files/About.msg");
 SettingsMenu();
 }
 
-static const char * menu[count_menu_button] = {"Game","Help","About","Settings","Exit"}; //5
 
-inline void WriteMenu(unsigned char selected){
+
+static inline void WriteMenu(unsigned char selected, bool inGame){
 bool ButtonsInited = true;
+
+
+
+
+const char * menu[count_menu_button] = { inGame ? "Continue" : "Game" ,"Help","About","Settings","Exit"}; //5
+
+
 if(!ButtonsCoords){
 	ButtonsInited=false;
 	ButtonsCoords=(SDL_Rect*)malloc(sizeof(SDL_Rect)*count_menu_button);
@@ -390,7 +397,7 @@ void * StartMenu(bool InGame){
 			for(unsigned short i = count_menu_button;i--;){
 				if( MOUSECHECK(e, button, ButtonsCoords, i) ){
 					menuActive=false;
-					printf("Clicked %s\n",menu[i]);
+				//	printf("Clicked %s\n",menu[i]);
 				}
 			}
 			break;
@@ -424,7 +431,7 @@ void * StartMenu(bool InGame){
         Util::images::putimage(alock,  (w_w/3)+alock->w, (h_w/4), 0, 0, alock->w, alock->h);
     //every time\
  	we are must update the surface of window
- 	WriteMenu(MenuItem);
+ 	WriteMenu(MenuItem, InGame);
     	SDL_UpdateWindowSurface( m_window ); // m_surface <-> m_window
 	SDL_Delay( 1 ); // 2000 microseconds / 1000 = 2second
 	}
@@ -438,7 +445,8 @@ void * StartMenu(bool InGame){
 	SDL_FillRect( m_surface, NULL, SDL_MapRGB( m_surface->format, BACKGROUND ) );
 	switch(MenuItem){	
 		case Game:
-			SetLevel();
+			if(!InGame)
+			 SetLevel();
 			return (void*)0;
 			break;
 		case Help:
