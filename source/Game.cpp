@@ -4,10 +4,11 @@
 
 
 
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include"menu.hpp"
-#include<unistd.h>
+#include <sstream>
 
 
 
@@ -631,6 +632,36 @@ void Drive :: OpenShipher(){
 }
 
 
+const char  *  Drive::numToStr(ull num, unsigned char element){
+	std::stringstream ReturnString; // I am bored...
+
+	ReturnString << num;
+
+	switch(element){
+		case 0:
+			ReturnString << "←";
+			break;			
+		case 1:
+			ReturnString << "↑";		
+			break;				
+		case 2:
+			ReturnString << "→";
+			break;			
+		default:
+			break;
+	}
+	char * a 
+		= 
+		(char*)malloc( 
+			GameDrive::Crypto::Rotor::_strlen_( ReturnString.str().c_str() ) +1 );// char = 1 byte = void, sizeof not need
+	void *fa = a;
+	const char * tmp = ReturnString.str().c_str() ;
+	while(*tmp)
+		*a++=*tmp++;
+	*a++='\0';
+	//printf("%s\n",fa);
+	return (const char*)fa;
+}
 
 void Drive::StartGame(void){
 	bool GameOver = false;
@@ -658,6 +689,9 @@ void Drive::StartGame(void){
 //	SDL_RenderClear(mrenderer);
 //	SDL
 
+
+
+
 	GLenum glError;
 	
 	std::string Button;
@@ -666,6 +700,10 @@ void Drive::StartGame(void){
 		WinRoom = *(this->rooms + (1 + rand()%3) ); 
 		puts("WinRoom inited");
 	}
+
+
+
+
 	glMatrixMode(GL_PROJECTION);
 	gluLookAt(
 		1.0,1.0,0.0, // x,y,z eye  
@@ -685,6 +723,22 @@ void Drive::StartGame(void){
 	
 	
 //	SDL_GL_SwapWindow(m_window); // Swap Window
+
+	SDL_Surface * DoorNumbers[3]; 
+	SDL_Texture * DoorNumbersT[3];
+	for(unsigned short i = 3; i --;){
+		const char * TextRoom = numToStr( *(this->rooms+i), i );
+		DoorNumbers[i] =  TTF_RenderUTF8_Blended(GameFont, TextRoom , SELECTEDCOLOR);
+		free((void*)TextRoom);
+		DoorNumbersT[i] = SDL_CreateTextureFromSurface(mrenderer, DoorNumbers[i]);
+	}
+	
+	
+	
+	for(unsigned short i = 3;i--;){
+		SDL_FreeSurface(DoorNumbers[i]);
+		SDL_DestroyTexture(DoorNumbersT[i]);
+	}
 
 	Button = Util::Buttons::GetButton();
 		if(Button == "Escape") StartMenu(true);

@@ -43,6 +43,7 @@ private:
 protected:
 	void OpenShipher(void);
 	void InitIL();
+	const char  *  numToStr(ull num, unsigned char element);
 public:
 	void InitLevels(void);
 	void StartGame(void);
