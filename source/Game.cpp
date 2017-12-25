@@ -705,12 +705,18 @@ void Drive::StartGame(void){
 		}
 	//printf("%d != %d/%d/%d\n",this->WinRoom, *(rooms), *(rooms+1), *(rooms+2));
 	SDL_GL_DeleteContext(glcontext); //Delete Context
-	if(!GameOver){
-		
-		if( SimplyMoving && (rooms+3 <= lRooms) ) rooms+=3;
-		//... Boss room
-		this->StartGame();
+
+	if(SimplyMoving){
+			if( (rooms+3 <= lRooms) ) rooms+=3;
+			//... Boss room
+			free(Phrase);
+			Phrase=0;
+			this->WinRoom=0;
+
 	}
+	if(SimplyMoving || !GameOver)
+		this->StartGame();
+	
 
 }
 
