@@ -1,5 +1,7 @@
 #pragma once
 #include<string>
+#include <sstream>
+
 #define KEYSPATH "Settings/Keys.bnd"
 #define ROTORMOVING 255
 #define MOVINGGAME 2
@@ -43,7 +45,7 @@ private:
 protected:
 	void OpenShipher(void);
 	void InitIL();
-	const char  *  numToStr(ull num, unsigned char element);
+	std::stringstream numToStr(ull num, unsigned char element);
 public:
 	void InitLevels(void);
 	void StartGame(void);

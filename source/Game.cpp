@@ -8,7 +8,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include"menu.hpp"
-#include <sstream>
+
 
 
 
@@ -563,6 +563,31 @@ void Drive :: OpenShipher(){
 			SDL_DestroyTexture(WinRoomLetter);	
 			SDL_FreeSurface(WinRoomText[i]);
 		}
+
+	SDL_Surface * DoorNumbers[3]; 
+	SDL_Texture * DoorNumbersT[3];
+	for(unsigned short i = 3; i --;){
+		//printf("%d\n",i);
+		std::stringstream TextRoom = numToStr( *(this->rooms+i), i );
+		DoorNumbers[i] =  TTF_RenderUTF8_Blended(GameFont, TextRoom.str().c_str() , SELECTEDCOLOR);
+		DoorNumbersT[i] = SDL_CreateTextureFromSurface(mrenderer, DoorNumbers[i]);
+	}
+	
+	
+	
+	
+	for(unsigned short i = 3;i--;){
+		SDL_Rect tmp = { 100 + w_w/3 * i + DoorNumbers[i]->w, h_w-350, DoorNumbers[i]->w, DoorNumbers[i]->h};
+		SDL_RenderCopy(mrenderer,DoorNumbersT[i], NULL, &tmp);
+	}
+
+	SDL_RenderPresent(mrenderer);
+
+	for(unsigned short i = 3;i--;){
+		SDL_FreeSurface(DoorNumbers[i]);
+		SDL_DestroyTexture(DoorNumbersT[i]);	
+	}
+
 	SDL_RenderPresent(mrenderer);
 	SDL_PollEvent(&e);
 	switch(e.type){ // event switch
@@ -632,35 +657,26 @@ void Drive :: OpenShipher(){
 }
 
 
-const char  *  Drive::numToStr(ull num, unsigned char element){
+std::stringstream  Drive::numToStr(ull num, unsigned char element){
 	std::stringstream ReturnString; // I am bored...
 
-	ReturnString << num;
+
 
 	switch(element){
 		case 0:
-			ReturnString << "←";
+			ReturnString << "←Left:";
 			break;			
 		case 1:
-			ReturnString << "↑";		
+			ReturnString << "→Right:";
 			break;				
 		case 2:
-			ReturnString << "→";
+			ReturnString << "↑Top:";		
 			break;			
 		default:
 			break;
 	}
-	char * a 
-		= 
-		(char*)malloc( 
-			GameDrive::Crypto::Rotor::_strlen_( ReturnString.str().c_str() ) +1 );// char = 1 byte = void, sizeof not need
-	void *fa = a;
-	const char * tmp = ReturnString.str().c_str() ;
-	while(*tmp)
-		*a++=*tmp++;
-	*a++='\0';
-	//printf("%s\n",fa);
-	return (const char*)fa;
+	ReturnString << num;
+	return ReturnString;
 }
 
 void Drive::StartGame(void){
@@ -671,7 +687,7 @@ void Drive::StartGame(void){
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
 	SDL_GL_SetSwapInterval(1);	//Vertical Sync
-	
+	glActiveTexture(GL_TEXTURE0);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST); 
 	glShadeModel(GL_SMOOTH);
@@ -724,23 +740,7 @@ void Drive::StartGame(void){
 	
 //	SDL_GL_SwapWindow(m_window); // Swap Window
 
-	SDL_Surface * DoorNumbers[3]; 
-	SDL_Texture * DoorNumbersT[3];
-	for(unsigned short i = 3; i --;){
-		const char * TextRoom = numToStr( *(this->rooms+i), i );
-		DoorNumbers[i] =  TTF_RenderUTF8_Blended(GameFont, TextRoom , SELECTEDCOLOR);
-		free((void*)TextRoom);
-		DoorNumbersT[i] = SDL_CreateTextureFromSurface(mrenderer, DoorNumbers[i]);
-	}
-	
-	
-	
-	for(unsigned short i = 3;i--;){
-		SDL_FreeSurface(DoorNumbers[i]);
-		SDL_DestroyTexture(DoorNumbersT[i]);
-	}
-
-	Button = Util::Buttons::GetButton();
+		Button = Util::Buttons::GetButton();
 		if(Button == "Escape") StartMenu(true);
 		else if(Button == GameKeys[Action]){
 			OpenShipher();
@@ -757,9 +757,10 @@ void Drive::StartGame(void){
 			else SimplyMoving=true;
 			
 		}
+	 
 	//printf("%d != %d/%d/%d\n",this->WinRoom, *(rooms), *(rooms+1), *(rooms+2));
 	SDL_GL_DeleteContext(glcontext); //Delete Context
-
+	SDL_RenderClear(mrenderer);
 	if(SimplyMoving){
 			if( (rooms+3 <= lRooms) ) rooms+=3;
 			//... Boss room
