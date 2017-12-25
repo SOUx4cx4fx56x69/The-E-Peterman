@@ -633,7 +633,7 @@ void Drive :: OpenShipher(){
 				if(selected)
 					 selected--;
 			}else if(MenuKey == "D" || MenuKey == "Right"){
-			 	if(selected < CountLettersOfPhrase) 
+			 	if(selected < CountLettersOfPhrase-1) 
 					selected++;
 			}//elseif
 			
@@ -713,7 +713,7 @@ void Drive::StartGame(void){
 	std::string Button;
 	
 	if( !this->WinRoom ){
-		WinRoom = *(this->rooms + (1 + rand()%3) ); 
+		WinRoom = *(this->rooms + 1 +(rand()%3) ); 
 		puts("WinRoom inited");
 	}
 
@@ -762,15 +762,22 @@ void Drive::StartGame(void){
 	SDL_GL_DeleteContext(glcontext); //Delete Context
 	SDL_RenderClear(mrenderer);
 	if(SimplyMoving){
-			if( (rooms+3 <= lRooms) ) rooms+=3;
+			if( (rooms+3 < lRooms) ) rooms+=3;
+			else{
+				puts("Okey need boss door");
+			}
 			//... Boss room
 			free(Phrase);
 			Phrase=0;
 			this->WinRoom=0;
-
+			SDL_SetRenderDrawColor(mrenderer,0,0,0,0);
+			SDL_RenderClear(mrenderer);
+			SDL_RenderPresent(mrenderer);
+			SDL_Delay(500);
 	}
-	if(SimplyMoving || !GameOver)
+	if(SimplyMoving || !GameOver){
 		this->StartGame();
+	}
 	
 
 }
