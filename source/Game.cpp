@@ -212,6 +212,7 @@ Drive::Drive(void){
 	this->InitKeys();
 	this->InitIL();
 	this->Phrase=0;
+	this->WinRoom = 0;
 }
 
 void Drive::InitKeys(void){
@@ -482,11 +483,13 @@ void Drive::InitLevels(void){
 	this->rooms = (ull*) malloc(sizeof(ull) * 3 * 3 * dif);;
 
 	
+	
 	for( unsigned short i = (3 * 3 * (dif+1) ); i--; ){
 		this->rooms[i] = (rand()%MAXNUMBERROTOR) + 1 ;
 	}
-
+	this->lRooms = &this->rooms[3 * 3 * (dif+1)] ; 
 	puts("Levels inited");
+	
 
 }
 
@@ -627,8 +630,11 @@ void Drive :: OpenShipher(){
 
 }
 
-void Drive::StartGame(void){
 
+
+void Drive::StartGame(void){
+	bool GameOver = false;
+	bool SimplyMoving = false;
 	//Light work which materials...
 	//glEnable(GL_LIGHTING);
 
@@ -674,7 +680,7 @@ void Drive::StartGame(void){
 	glError = glGetError();
 	if(glError != GL_NO_ERROR) printf("OpenGL error: %s\n", gluErrorString(glError));
 
-//rooms+=3;
+
 
 	
 	
@@ -685,9 +691,34 @@ void Drive::StartGame(void){
 		else if(Button == GameKeys[Action]){
 			OpenShipher();
 		}
-		
+		else if(Button == GameKeys[Left]){
+			if(this->WinRoom != *(rooms) ) GameOver=true;
+			else
+			{
+				SimplyMoving=true;
+			}
+		}else if(Button == GameKeys[Right]){
+				if(this->WinRoom != *(rooms+1) ) GameOver=true;
+				else
+				{
+					SimplyMoving=true;
+				}		
+		}else if(Button == GameKeys[Top]){
+			if(this->WinRoom != *(rooms+2) ) GameOver=true;
+			else
+			{
+				SimplyMoving=true;
+			}
+		}
+	//printf("%d != %d/%d/%d\n",this->WinRoom, *(rooms), *(rooms+1), *(rooms+2));
 	SDL_GL_DeleteContext(glcontext); //Delete Context
-	this->StartGame();
+	if(!GameOver){
+		
+		if( SimplyMoving && (rooms+3 <= lRooms) ) rooms+=3;
+		//... Boss room
+		this->StartGame();
+	}
+
 }
 
 }

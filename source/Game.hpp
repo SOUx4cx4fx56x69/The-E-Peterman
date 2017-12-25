@@ -36,6 +36,7 @@ extern unsigned char dif;
 class Drive{
 private:
 	ull * rooms;
+	void * lRooms;
 	void InitKeys(void);
 	ull WinRoom;
 	char * Phrase;
