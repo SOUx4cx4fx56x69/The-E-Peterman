@@ -504,47 +504,124 @@ void Drive :: OpenShipher(){
 
 	SDL_Rect * ButtonsCoords = new SDL_Rect[CountLettersOfPhrase];
 
+	SDL_Surface ** WinRoomText =  (SDL_Surface **)calloc(CountLettersOfPhrase, sizeof(SDL_Surface));
 	SDL_Rect paperRect = {w_w/4 + w_w/10, h_w/4, w_w/2,h_w/4};
 
-	SDL_SetRenderDrawColor(mrenderer, 120,120,120, 255);
-
-	SDL_RenderFillRect(mrenderer, NULL);
-
-	SDL_Surface ** WinRoomText =  (SDL_Surface **)calloc(CountLettersOfPhrase, sizeof(SDL_Surface));
-	
-	
-
-
-
-	SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
-
 	int ButtonspPadding = (w_w/3)/CountLettersOfPhrase;
+	unsigned int selected=0;
+	int actived=-1;
+
+
+	
+	
+
+
+
+
+
 
 
 	//SDL_Surface * WinRoomText = TTF_RenderUTF8_Blended_Wrapped(GameFont, \
 				Phrase, {0,0,0}, w_w/4 );
-	
-	SDL_RenderFillRect(mrenderer, &paperRect);
+
 	//SDL_UpdateWindowSurface(m_window);
-	for(int i = CountLettersOfPhrase; i--;){
-		
-		const char  tmp[] = {Phrase[i]};
-		WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, {255,255,255});
-		//SDL_BlitSurface
-		ButtonsCoords[i] = {(w_w/2)-(w_w/10)+ButtonspPadding*i,
-			  h_w/4 ,
-				 WinRoomText[i]->w, WinRoomText[i]->h};
-		SDL_Texture * WinRoomLetter = SDL_CreateTextureFromSurface(mrenderer, WinRoomText[i]);
-		SDL_RenderCopy(mrenderer, WinRoomLetter, NULL, &ButtonsCoords[i]);
-		SDL_DestroyTexture(WinRoomLetter);
+	#define ACTIVEDCOLOR {122,122,0}
+	#define SELECTEDCOLOR {200,0,200}
+	#define SIMPLYCOLOR {255,255,255}
+
+	bool menu=true;
+	SDL_Event e;
+	while(menu){
+	SDL_SetRenderDrawColor(mrenderer, 120,120,120, 255);
+
+	SDL_RenderFillRect(mrenderer, NULL);
+
+	SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
+	SDL_RenderFillRect(mrenderer, &paperRect);
+
+		for(int i = CountLettersOfPhrase; i--;){
+
+			const char  tmp[] = {Phrase[i],'\0'};
+			if(i == actived)
+			 	WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, ACTIVEDCOLOR);
+			else if(i == selected)
+				WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, SELECTEDCOLOR);
+			else
+				WinRoomText[i] = TTF_RenderUTF8_Blended(GameFont, tmp, SIMPLYCOLOR);
+			//SDL_BlitSurface
+
+			ButtonsCoords[i] = {(w_w/2)-(w_w/10)+ButtonspPadding*i,
+				  h_w/4 ,
+					 WinRoomText[i]->w, WinRoomText[i]->h};
+
+			SDL_Texture * WinRoomLetter = SDL_CreateTextureFromSurface(mrenderer, WinRoomText[i]);
+			SDL_RenderCopy(mrenderer, WinRoomLetter, NULL, &ButtonsCoords[i]);
+			SDL_DestroyTexture(WinRoomLetter);	
+			SDL_FreeSurface(WinRoomText[i]);
+		}
+	SDL_RenderPresent(mrenderer);
+	SDL_PollEvent(&e);
+	switch(e.type){ // event switch
+		case SDL_QUIT:
+			printf("Quit after %d ticks\n",e.quit.timestamp);
+			GAMEEXIT;
+			break;
+		case SDL_MOUSEMOTION:
+			for(unsigned short i = CountLettersOfPhrase;i--;){
+				if( MOUSECHECK(e, motion, ButtonsCoords, i) ){
+					selected = i;
+					break;
+				}
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			for(unsigned short i = CountLettersOfPhrase;i--;){
+
+				if( MOUSECHECK(e, motion, ButtonsCoords, i) ){
+					selected = i;
+					if(actived>0){
+						Crypto::Rotor::shuffle(this->Phrase, actived,i);
+						actived=-1;
+					}
+					else
+						actived = i;
+					break;
+				}
+			}
+		case SDL_KEYDOWN: 
+		 if(e.key.keysym.scancode != SDL_GetScancodeFromKey(e.key.keysym.scancode)){
+			 std::string MenuKey = SDL_GetKeyName(e.key.keysym.sym);
+			 printf("MENU KEY: %s\n", MenuKey.c_str());
+			 if(MenuKey == "Escape") menu=false;
+			 else if(MenuKey == "Return"){
+				if(actived>0){
+					Crypto::Rotor::shuffle(this->Phrase, actived,selected);
+					actived=-1;
+				}
+				else
+					actived=selected;
+			 }else if(MenuKey == "A" || MenuKey == "Left") {//elseif
+				if(selected)
+					 selected--;
+			}else if(MenuKey == "D" || MenuKey == "Right"){
+			 	if(selected < CountLettersOfPhrase) 
+					selected++;
+			}//elseif
+			
+		  } //if (e.key...
+			e.key.keysym.scancode=(SDL_Scancode)0;
+			break;
+		 default:
+			break;
+		}//switch
 	}
 
-	SDL_RenderPresent(mrenderer);
 
-	for(ull i = CountLettersOfPhrase; i--;)
+
+	//for(ull i = CountLettersOfPhrase; i--;)\
 		SDL_FreeSurface(WinRoomText[i]);
 
-	Util::Buttons::GetButton();
+
 
 
 
