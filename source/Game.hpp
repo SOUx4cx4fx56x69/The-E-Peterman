@@ -43,6 +43,8 @@ private:
 	void InitKeys(void);
 	ull WinRoom;
 	char * Phrase;
+	ull BossPass;
+	bool BossRoom(void);
 protected:
 	void OpenShipher(void);
 	void InitIL();

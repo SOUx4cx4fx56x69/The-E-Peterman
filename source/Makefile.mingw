@@ -1,7 +1,8 @@
 COMPILER=i686-w64-mingw32-g++
 NOTHOMEFLAGS=-I../ForCompiler/include -L../ForCompiler/lib/ -m32
 FLAGS= -I/usr/include/freetype2 -O2 -static-libstdc++ -static-libgcc -g3 -ggdb -std=c++11
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lopengl32 -lglu32 -lfreeglut -lIL -lILUT  \
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lopengl32 -lglu32 -lfreeglut\
+-ldevil -lIL -lILUT
 #-lpthread
 EXITNAME=Check.exe
 OBJS = main.o Util.o Game.o menu.o

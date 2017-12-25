@@ -683,7 +683,60 @@ std::stringstream  Drive::numToStr(ull num, unsigned char element){
 	return ReturnString;
 }
 
+bool Drive::BossRoom(void){
+	BossPass = BossPass ? : 1;
+	while(BossPass < 1000) BossPass*=10;
+	while(BossPass > 9999) BossPass/=10;
+
+	std::string PassText;
+	std::stringstream BossPassText;
+	BossPassText << BossPass;
+	unsigned char lives = 3;
+	
+while(1){
+	SDL_Rect paperRect = {w_w/4 + w_w/10, h_w/4, w_w/2,h_w/4};
+
+
+
+	
+	while(PassText.size() < 4){
+		SDL_SetRenderDrawColor(mrenderer, 120,120,120, 255);	
+		SDL_RenderFillRect(mrenderer, NULL);
+		SDL_SetRenderDrawColor(mrenderer, 124, 188, 226, 245);
+		SDL_RenderFillRect(mrenderer, &paperRect);
+
+		SDL_Surface * p = TTF_RenderUTF8_Blended_Wrapped(GameFont, PassText.c_str(), SELECTEDCOLOR,w_w);
+		SDL_Texture * pt = SDL_CreateTextureFromSurface(mrenderer, p);
+
+		SDL_Rect RectRender = {(w_w/2)-(w_w/10),
+				  h_w/4 , SizeFont, SizeFont};
+
+		SDL_FreeSurface(p);
+		SDL_RenderCopy(mrenderer, pt, NULL, &RectRender);
+		SDL_DestroyTexture(pt);
+		SDL_RenderPresent(mrenderer);
+
+		std::string tmp = Util::Buttons::GetButton();
+		if(tmp == "Escape") StartMenu(true);
+		else if(tmp.c_str()[0] < 48 || tmp.c_str()[0] > 57) continue;
+		PassText += tmp;
+	}	
+	if(PassText == BossPassText.str()){
+		// TODO: Win.
+		return true;
+	}else{
+		printf("lives: %d\n");
+		lives--;
+		PassText="";
+		if(!lives) return false;
+	}
+}
+	
+ 
+}
+
 void Drive::StartGame(void){
+	//this->BossRoom();
 	bool GameOver = false;
 	bool SimplyMoving = false;
 	//Light work which materials...
@@ -719,6 +772,9 @@ void Drive::StartGame(void){
 	if( !this->WinRoom ){
 		WinRoom = *(this->rooms + 1 +(rand()%3) ); 
 		puts("WinRoom inited");
+		if( 
+			(float(WinRoom)/float(3) - WinRoom) == 0 && 
+			(float(WinRoom)/float(6) - WinRoom) != 0 ) this->BossPass+=WinRoom;
 	}
 
 
@@ -769,6 +825,27 @@ void Drive::StartGame(void){
 			if( (rooms+3 < lRooms) ) rooms+=3;
 			else{
 				puts("Okey need boss door");
+				if( !this->BossRoom() ){
+					GameOver = true;
+				}else{
+					//TODO: Win.
+					SDL_Surface * WinText =
+					TTF_RenderUTF8_Blended(GameFont, "You are win!..." , {0,255,0});
+
+	
+					SDL_RenderClear(mrenderer);
+					SDL_RenderFillRect(mrenderer,NULL);
+					SDL_RenderPresent(mrenderer);
+
+					Util::images::putimage(WinText, w_w/2 - 100, h_w/4, 0, 0, w_w, h_w);
+					SDL_UpdateWindowSurface(m_window);
+
+					Util::Buttons::GetButton();
+					SDL_FreeSurface(WinText);
+					exit(0);
+					
+				}
+
 			}
 			//... Boss room
 			free(Phrase);
@@ -779,7 +856,7 @@ void Drive::StartGame(void){
 			SDL_RenderPresent(mrenderer);
 			SDL_Delay(500);
 	}
-	if(SimplyMoving || !GameOver){
+	if( !GameOver ){
 		this->StartGame();
 	}
 	
