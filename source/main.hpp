@@ -5,7 +5,7 @@
 
 
 
-#define ERROR(str){\
-fprintf(stderr,"%s\n",str);\
-exit(3);\
+#define ERROR_(str){\
+	fprintf(stderr,"%s\n",str);\
+	exit(3);\
 }

@@ -7,12 +7,13 @@
 #define MOVINGGAME 2
 #define MAXNUMBERROTOR 1000
 
-#include <ft2build.h>
+//#ifndef _WIN32
+/*#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
-
+*/
 typedef unsigned long long ull;
 
 namespace GameDrive{
@@ -53,11 +54,12 @@ public:
 
 };
 
+/*
 namespace FreeType{
 	FT_Face InitFace(const char * fontName, unsigned short height);
 
 };
-
+*/
 namespace Crypto{
 	namespace Rotor{
 		char * RotoPhrase(const char * what, unsigned char count=ROTORMOVING);

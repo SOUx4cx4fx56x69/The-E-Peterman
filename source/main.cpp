@@ -19,7 +19,7 @@ TTF_Font * GameFont;
 unsigned short SizeFont;
 
 static inline void init_graph(void){
-	if( SDL_Init( SDL_INIT_VIDEO ) != 0 ) ERROR(SDL_GetError());
+	if( SDL_Init( SDL_INIT_VIDEO ) != 0 ) ERROR_( SDL_GetError() );
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
@@ -41,21 +41,21 @@ static inline void init_graph(void){
         printf("%d x %d\n",h_w,w_w);
 	SizeFont = ((h_w+w_w)/100);
         GameFont=TTF_OpenFont("GameFont.ttf", SizeFont );
-	if(!GameFont)ERROR(TTF_GetError());
+	if(!GameFont)ERROR_(TTF_GetError());
 	puts("Renderer init");
 
 	
 	/*
 		const char* title, int x, int y, int w, int h, Uint32 flags
 	*/
-	if(!m_window)ERROR(SDL_GetError());
+	if(!m_window)ERROR_(SDL_GetError());
 
 	// now get surface of window
 	m_surface = SDL_GetWindowSurface( m_window );
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-int WinMain(int argc, char**arguments){
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd){ // for shit mingw version
 #else
 int main(int argc, char ** arguments){
 #endif

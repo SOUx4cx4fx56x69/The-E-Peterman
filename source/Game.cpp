@@ -9,6 +9,9 @@
 #include <GL/glu.h>
 #include"menu.hpp"
 
+#if defined(_WIN32) || defined(_WIN64)
+	#include<time.h>
+#endif
 
 
 
@@ -156,7 +159,7 @@ namespace Crypto{
 };
 
 
-
+/*
 namespace FreeType{
 FT_Face InitFace(const char * fontName, unsigned short height){
  FT_Library library;
@@ -174,6 +177,7 @@ FT_Face InitFace(const char * fontName, unsigned short height){
 }
 
 };
+*/
 
 
 
@@ -687,7 +691,7 @@ void Drive::StartGame(void){
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window); // CreateOpenGL Context
 	SDL_GL_SetSwapInterval(1);	//Vertical Sync
-	glActiveTexture(GL_TEXTURE0);
+	//glActiveTexture(GL_TEXTURE0);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST); 
 	glShadeModel(GL_SMOOTH);
