@@ -79,12 +79,30 @@ int main(int argc, char ** arguments){
 	SDL_FreeSurface(cursor);
 	GameDrive::Drive game = GameDrive::Drive();
 
+while(1){
 
 	StartMenu(false);
 	game.InitLevels();
 	game.StartGame();
+	
+	SDL_Surface * GameOverSurface =
+		TTF_RenderUTF8_Blended(GameFont, "Game Over Down any key..." , {255,0,0});
 
-	GAMEEXIT;
+	
+	SDL_RenderClear(mrenderer);
+	SDL_RenderFillRect(mrenderer,NULL);
+	SDL_RenderPresent(mrenderer);
+
+	Util::images::putimage(GameOverSurface, w_w/2 - 100, h_w/4, 0, 0, w_w, h_w);
+	SDL_UpdateWindowSurface(m_window);
+
+	Util::Buttons::GetButton();
+	SDL_FreeSurface(GameOverSurface);
+
+
+}
+
+//	GAMEEXIT;
 
 }
 

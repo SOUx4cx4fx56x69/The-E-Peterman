@@ -294,6 +294,8 @@ while(menu){
 }
 ButtonsCoords=0;
 
+SDL_FillRect( m_surface, NULL, SDL_MapRGB(m_surface->format, 0, 0, 0) );
+SDL_UpdateWindowSurface(m_window);
 
       
 
