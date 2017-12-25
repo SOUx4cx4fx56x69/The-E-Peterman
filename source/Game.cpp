@@ -693,22 +693,15 @@ void Drive::StartGame(void){
 		}
 		else if(Button == GameKeys[Left]){
 			if(this->WinRoom != *(rooms) ) GameOver=true;
-			else
-			{
-				SimplyMoving=true;
-			}
+			else SimplyMoving=true;
 		}else if(Button == GameKeys[Right]){
 				if(this->WinRoom != *(rooms+1) ) GameOver=true;
-				else
-				{
-					SimplyMoving=true;
-				}		
+				else SimplyMoving=true;
+	
 		}else if(Button == GameKeys[Top]){
 			if(this->WinRoom != *(rooms+2) ) GameOver=true;
-			else
-			{
-				SimplyMoving=true;
-			}
+			else SimplyMoving=true;
+			
 		}
 	//printf("%d != %d/%d/%d\n",this->WinRoom, *(rooms), *(rooms+1), *(rooms+2));
 	SDL_GL_DeleteContext(glcontext); //Delete Context
