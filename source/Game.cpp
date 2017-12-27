@@ -770,7 +770,7 @@ void Drive::StartGame(void){
 	std::string Button;
 	
 	if( !this->WinRoom ){
-		WinRoom = *(this->rooms + 1 +(rand()%3) ); 
+		WinRoom = *(this->rooms + (rand()%3) ); 
 		puts("WinRoom inited");
 		if( 
 			(float(WinRoom)/float(3) - WinRoom) == 0 && 
